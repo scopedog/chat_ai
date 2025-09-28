@@ -1,10 +1,11 @@
 #
-# Simple AI chat program using Google Gemma
-# Can answer a question from given context, quote, text file but
-# does not remember chat history
+# Simple AI chat program using Google Gemma via Ollama
+# Can answer a question from given context, quote, a text file but
+# does not remember past chat content
 # Best for simple Q&A
 # See example usage of SimpleGemmaAi in ask_ai()
 # Also, 'python3 simple_gemma_ai.py' starts a simple Q&A session
+# Ask a question like "List male cats in my house." 
 #
 import json
 from enum import Enum
@@ -21,11 +22,11 @@ class SimpleGemmaAi:
         quote: str = None,
         context: str = None,
         file: str = None, # Currently supports text file only
+        ollama_host: str = "localhost", # Ollama host running LLM
+        ollama_port: int = 11434,
         model = "gemma3n:e4b", # LLM model
                                # "gemma3:latest", "gemma3:12b", ....
         temperature = 0.0, 
-        ollama_host: str = "localhost", # Ollama host running LLM
-        ollama_port: int = 11434,
     ) -> str:
         # Initialize parameters
         ollama_base_url = f"http://{ollama_host}:{ollama_port}"
@@ -101,8 +102,10 @@ def ask_ai():
                     print("\n* Asking AI....")
                     answer = SimpleGemmaAi.ask(
                                 system_prompt="You are a very kind assistant. Please answer a question.",
-                                context="There are four cats in my house. The eldest is Kuro and he is 14 years old. Sora is a 8 year old gentle cat and Billy was born in 2018. Shiro is the only female and was born in 2024.",
-                                question=question)
+                                context="There are four cats in my house. The oldest is Kuro, and he is 14 years old. Sora is an 8-year-old sweet cat, and Billy was born in 2018. Shiro is the only female and was born in 2024. Billy is the only cat from outside the US.",
+                                question=question,
+                                ollama_host="localhost",
+                                model="gemma3n:e4b",)
 
                 break
 
