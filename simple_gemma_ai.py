@@ -2,6 +2,9 @@
 # Simple AI chat program using Google Gemma
 # Can answer a question from given context, quote, text file but
 # does not remember chat history
+# Best for simple Q&A
+# See example usage of SimpleGemmaAi in ask_ai()
+# Also, 'python3 simple_gemma_ai.py' starts a simple Q&A session
 #
 import json
 from enum import Enum
@@ -72,7 +75,7 @@ class SimpleGemmaAi:
 
         return response.message.content
 
-# Ask AI question
+# Ask AI
 def ask_ai():
     # Ask question
     while True:

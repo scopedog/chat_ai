@@ -2,6 +2,10 @@
 # GoogleのGemmaを使用したシンプルなチャットAIプログラム
 # コンテクスト、引用、テキストファイルで情報を与え、それに則って質問に答えるが、
 # 過去のチャットの内容は記憶しない
+# 簡単な質問の受け答えの利用に最適
+# ask_ai()に例的な使い方を示しています
+# また、python3 simple_gemma_ai_ja.py で日本語によるシンプルな受け答えを
+# 開始します
 #
 import json
 from enum import Enum
@@ -72,7 +76,7 @@ class SimpleGemmaAi:
 
         return response.message.content
 
-# Ask AI question
+# Ask AI
 def ask_ai():
     # Ask question
     while True:
