@@ -5,7 +5,7 @@
 # Best for simple Q&A
 # See example usage of SimpleGemmaAi in ask_ai()
 # Also, 'python3 simple_gemma_ai.py' starts a simple Q&A session
-# Ask a question like "List male cats in my house." 
+# Ask a question like "List all male cats in my house." 
 #
 import json
 from enum import Enum
@@ -24,8 +24,7 @@ class SimpleGemmaAi:
         file: str = None, # Currently supports text file only
         ollama_host: str = "localhost", # Ollama host running LLM
         ollama_port: int = 11434,
-        model = "gemma3n:e4b", # LLM model
-                               # "gemma3:latest", "gemma3:12b", ....
+        model = "gemma3n:e4b", # LLM model: "gemma3:latest", "gemma3:12b", ....
         temperature = 0.0, 
     ) -> str:
         # Initialize parameters

@@ -4,9 +4,8 @@
 # チャットの内容は記憶しない
 # 簡単な質問の受け答えに最適
 # ask_ai()に例的な使い方を示しています
-# また、python3 simple_gemma_ai_ja.py で日本語によるシンプルな受け答えを
-# 開始します
-# 「我が家でオスの猫は？」などと質問してみてください
+# また、python3 simple_gemma_ai_ja.py で日本語によるシンプルな受け答えを開始します
+# 猫に関する情報がコンテクストとして与えられているので、「我が家でオスの猫は？」などと質問してみてください
 #
 import json
 from enum import Enum
@@ -23,11 +22,10 @@ class SimpleGemmaAi:
         quote: str = None,
         context: str = None,
         file: str = None, # Currently supports text file only
-        model = "gemma3n:e4b", # LLM model
-                               # "gemma3:latest", "gemma3:12b", ....
-        temperature = 0.0, 
         ollama_host: str = "localhost", # Ollama host running LLM
         ollama_port: int = 11434,
+        model = "gemma3n:e4b", # LLM model: "gemma3:latest", "gemma3:12b", ....
+        temperature = 0.0, 
     ) -> str:
         # Initialize parameters
         ollama_base_url = f"http://{ollama_host}:{ollama_port}"
@@ -84,8 +82,8 @@ def ask_ai():
         question = ''
         res = None
         terminate = False
-        print("\n- 質問してください。複数行の質問でもOKです。\n" +
-              "- 質問入力後、Enterを押し、Ctrl-Dを押すとAIが質問を読み取ります。\n" +
+        print("\n- 質問を入力してください。複数行でもOKです。\n" +
+              "- 質問入力後、Enterを押し、Ctrl-Dを押すとAIが質問に答えます。\n" +
               "- 何も入力しないでCtrl-Dを押すか、'exit'とだけ入力してEnterを押すと終了します。\n")
 
         # Accept multiple lines including empty lines
@@ -100,7 +98,7 @@ def ask_ai():
                     terminate = True
                 else:
                     # Ask question to AI
-                    print("\n* Asking AI....")
+                    print("\n* AIに問い合わせ中....")
                     answer = SimpleGemmaAi.ask(
                                 system_prompt="あなたは優しくて何でも知っています。質問に日本語で答えて下さい。",
                                 context="我が家には4匹の猫がいます。猫の名前は「クロ」「ソラ」「ビリー」「シロ」で、シロだけがメスです。\nクロは乱暴で、ソラは食いしん坊で、ビリーはフレンドリー、シロはいつも天井をキョロキョロ眺めています。\nクロは14歳で、ソラは8歳、ビリーは7歳、シロは1歳です。",
