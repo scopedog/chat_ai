@@ -85,6 +85,7 @@ class GemmaAi:
                             chunk_size=chunk_size,
                             chunk_overlap=chunk_overlap)
             docs = docs_ctx.docs
+            #print(docs)
             combined_ctx = docs_ctx.combined_ctx
         self.docs = docs
         self.combined_ctx = combined_ctx
