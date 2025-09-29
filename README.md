@@ -1,7 +1,25 @@
 # chat_ai
 
-A powerful Chat AI with RAG, chat history, and context awareness.  Uses Gemma (via Ollama) and GPT models.  Loads data from TXT, PDF, DOC, CSV, web pages (HTML), spreadsheets (XLS), presentations (PPTX), and documents (ODT).  Offers vectorization, summarization (with/without RAG), and other helpful features.
+A powerful Chat AI with RAG, chat history, and context awareness.  Uses Gemma (via Ollama) and GPT models.  Loads data from TXT, PDF, DOC, CSV, web pages (HTML), spreadsheets (XLS), presentations (PPTX), and LibreOffice documents (ODT).  Offers vectorization, summarization (with/without RAG), and other helpful features.
 
+
+## Prerequisites
+
+This program relies on the following components:
+
+* **Ollama:** A tool for running large language models locally. Ensure Ollama is installed and running on your system (defaults to localhost).
+* **Gemini Model:** The program uses the `gemma3n:e4b` language model. This model must be downloaded and accessible within Ollama.
+* **Embeddings Model:** The program utilizes the `bge-m3:latest` model for generating embeddings. This model also needs to be downloaded and be available in Ollama.
+
+**Installation:**
+
+1. **Install Ollama:** Follow the instructions on the [Ollama website](https://ollama.com/) to install Ollama for your operating system.
+2. **Pull Models:** Ensure the following models are pulled using Ollama:
+
+   ```bash
+   ollama pull gemma3n:e4b
+   ollama pull bge-m3:latest
+   ```
 
 ## gemma_ai.py
 AI Chat Program using Google Gemma via Ollama
@@ -48,7 +66,7 @@ This program provides a simple conversational interface powered by Google Gemma,
 **Key Features:**
 
 * **Contextual Question Answering:** Can answer questions based on provided context, quotes, or the content of a text file.
-* **Stateless Conversations:** This is designed for single-turn questions and answers; it does not retain information from previous interactions.
+* **Stateless Conversations:** This is designed for single-turn questions and answers; it does not retain information from previous interactions, i.e., does not remember past chat content.
 * **Ideal for Simple Q&A:** Best suited for straightforward questions and retrieving information.
 
 **How to Use:**
@@ -60,4 +78,9 @@ This program provides a simple conversational interface powered by Google Gemma,
 
 This program leverages the Google Gemma language model, which is run locally using the Ollama library.
 
+
+## simple_gemma_ai_ja.py
+A Japanese version of simple_gemma_ai.py. simple_gemma_ai.pyの日本語版。
+
+例として、`python3 simple_gemma_ai_ja.py`で走らせて、質問してみてください。我が家の猫に関する情報をコンテクストとして与えているので、「我が家でオスの猫は？」などの質問をしてみてください。
 
