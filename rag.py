@@ -150,7 +150,7 @@ def load_files(files: list[str],
     combined_ctx = ""
     for d in docs_no_split:
         combined_ctx += d.page_content + "\n"
-    logger.debug("combined_ctx:\n" + combined_ctx)
+    #logger.debug("combined_ctx:\n" + combined_ctx)
 
     # Split docs into chunks
     docs = text_splitter.split_documents(docs)
@@ -263,8 +263,9 @@ def load_rag_file(rag_file: str, docs):
         #load_pages_and_append(loader, docs)
         for page in loader.lazy_load():
             docs.append(page)
-    # Other
-    elif rag_file.lower().endswith(".txt"):
+    # Other: we regard as text file
+    #elif rag_file.lower().endswith(".txt"):
+    else:
         logger.info("RAG file " + rag_file + " was detected as a TXT file")
         loader = TextLoader(rag_file)
         #load_pages_and_append(loader, docs)
@@ -526,8 +527,6 @@ def load_websites(
         raise Exception(e)
         
     docs, dummy, combined_ctx = loader.load()
-    #logger.debug(docs)
-    #exit()
 
     # Initialize text splitter
     text_splitter = RecursiveCharacterTextSplitter(
