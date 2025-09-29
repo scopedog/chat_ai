@@ -1,3 +1,15 @@
+```python
+# AI chat program using Google Gemma via Ollama
+# Can answer a question using RAG and remember past chat content.
+# Good for general Q&A or chatting.
+# See example usage of GemmaAi at the bottom of this program after if __name__ == "__main__":
+# You can use TXT, PDF, DOC, CSV, WEB (http), HTML, XLS, PPTX, ODT (LibreOffice) for RAG.
+# For example:
+#   rag_data = ["aaa.pdf", "https://example.com", "bbb.doc"]
+#   GemmaAi(rag_data=rag_data)
+# This reads "aaa.pdf" and "bbb.doc" files and also accesses https://example.com, then uses their content with RAG.
+'''
+
 import os
 import sys
 import time
