@@ -256,8 +256,10 @@ class MyWebLoader:
                 raise Exception(msg)
                 return
 
-            if html.doc is not None:
-                self.docs.append(html.doc)
+            doc = html.doc
+            if doc is not None:
+                self.docs.append(doc)
+                self.combined_ctx += doc.page_content + "\n"
 
             #print(html.links)
             self.links = list(set(self.links + html.links))
@@ -270,6 +272,7 @@ class MyWebLoader:
             self.links = self.links[0:max_links]
         '''
 
+        '''
         # Also scan links
         extra_links = []
         for url in self.links:
@@ -296,9 +299,6 @@ class MyWebLoader:
                 self.docs.append(doc)
                 self.combined_ctx += doc.page_content + "\n"
         '''
-        '''
-
-        #print(self.docs)
 
     # Return self.docs
     def load(self):

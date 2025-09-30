@@ -418,17 +418,17 @@ class GemmaAi:
 
 # Main
 if __name__ == "__main__":
-    # Get RAG
-    rag_data = None
-    if len(sys.argv) > 1:
-        rag_data = sys.argv[1:]
-
     # Set system prompt
     system_prompt = (
         "You are a very kind assitant. Please answer user's questions."
         "\n\n"
         "{context}"
     )
+
+    # Get RAG context
+    rag_data = None
+    if len(sys.argv) > 1:
+        rag_data = sys.argv[1:]
 
     # Build knowledge base for admin manual
     qa = GemmaAi(
