@@ -17,10 +17,10 @@ class SimpleGemmaAi:
     # Ask
     def ask(
         question: str,
-        response_format: str = "text",
         system_prompt: str = "",
         quote: str = None,
         context: str = None,
+        response_format: str = "text",
         file: str = None, # Currently supports text file only
         ollama_host: str = "localhost", # Ollama host running LLM
         ollama_port: int = 11434,

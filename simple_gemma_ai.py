@@ -1,7 +1,6 @@
 #
 # Simple AI chat program using Google Gemma via Ollama
-# Can answer a question from given context, quote, a text file but
-# does not remember past chat content
+# Can answer questions from given context, quote, a text file but does not remember past chat content
 # Best for simple Q&A
 # See example usage of SimpleGemmaAi in ask_ai()
 # Also, 'python3 simple_gemma_ai.py' starts a simple Q&A session
@@ -17,10 +16,10 @@ class SimpleGemmaAi:
     # Ask
     def ask(
         question: str,
-        response_format: str = "text",
         system_prompt: str = "",
         quote: str = None,
         context: str = None,
+        response_format: str = "text",
         file: str = None, # Currently supports text file only
         ollama_host: str = "localhost", # Ollama host running LLM
         ollama_port: int = 11434,
@@ -80,7 +79,6 @@ def ask_ai():
     # Ask question
     while True:
         question = ''
-        res = None
         terminate = False
         print("\n- Ask a question. Multiple lines are accepted.\n" +
               "- Press Enter then Ctrl-D to submit. " +
@@ -100,7 +98,7 @@ def ask_ai():
                     # Ask question to AI
                     print("\n* Asking AI....")
                     answer = SimpleGemmaAi.ask(
-                                system_prompt="You are a very kind assistant. Please answer a question.",
+                                system_prompt="You are a very kind assistant. Please answer questions.",
                                 context="There are four cats in my house. The oldest is Kuro, and he is 14 years old. Sora is an 8-year-old sweet cat, and Billy was born in 2018. Shiro is the only female and was born in 2024. Billy is the only cat from outside the US.",
                                 question=question,
                                 ollama_host="localhost",
