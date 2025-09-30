@@ -94,7 +94,6 @@ def load_data(
                                      chunk_overlap=chunk_overlap,
                                      max_links=20)
             docs.extend(ctx_docs.docs)
-            print(docs)
             combined_ctx += ctx_docs.combined_ctx
         except Exception as e:
             raise Exception(e)

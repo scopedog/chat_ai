@@ -1,11 +1,11 @@
-# AI chat program using Google Gemma via Ollama
+# AI chat program using GPT such as gpt-4o-mini, gpt-5.
 # Can answer a question using RAG and remember past chat content.
 # Good for general Q&A or chatting.
-# See example usage of GemmaAi at the bottom of this program after if __name__ == "__main__":
+# See example usage of GptAi at the bottom of this program after if __name__ == "__main__":
 # You can use TXT, PDF, DOC, CSV, WEB (http), HTML, XLS, PPTX, ODT (LibreOffice) for RAG.
 # For example:
 #   rag_data = ["aaa.pdf", "https://example.com", "bbb.doc"]
-#   GemmaAi(rag_data=rag_data)
+#   GptAi(rag_data=rag_data)
 # This reads "aaa.pdf" and "bbb.doc" files and also accesses https://example.com, then uses their content with RAG.
 
 import os
@@ -14,21 +14,31 @@ import time
 import requests
 import random
 import string
-#from dotenv import load_dotenv
+import openai
+from dotenv import load_dotenv
 from loguru import logger
 from typing import Optional
+
 import rag
 
 # Load OpenAI key, etc
-#load_dotenv()
+if not load_dotenv():
+    print('Error: ".env" is not found or not accessible') 
+    sys.exit(1)
 
-#from openai import OpenAI
-from langchain_ollama import ChatOllama
+# Check OPENAI_API_KEY
+if os.getenv("OPENAI_API_KEY") is None:
+    print('Error: OPENAI_API_KEY is not set') 
+    sys.exit(1)
+
+from openai import OpenAI
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.prompts import PromptTemplate, ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate, MessagesPlaceholder
 from langchain_core.messages import HumanMessage
-from langchain_ollama import OllamaEmbeddings
+from langchain_openai import OpenAIEmbeddings
+from langchain_openai import ChatOpenAI
+from langchain_community.vectorstores.utils import filter_complex_metadata
 from langchain.schema import Document
 from langchain.chains.summarize import load_summarize_chain
 from langchain.chains import LLMChain
@@ -37,28 +47,30 @@ from langchain_chroma import Chroma
 from chromadb.api.client import SharedSystemClient
 import chromadb
 
-# Gemma AI class
-class GemmaAi:
+# Global parameters
+DEFAULT_MODEL = "gpt-4o-mini"
+#DEFAULT_MODEL = "gpt-4.1-mini"
+#DEFAULT_MODEL = "gpt-4.1-nano"
+
+# My AI class
+class GptAi:
     def __init__(
         self,
         docs: list[Document] = [], # Split documents
         combined_ctx: str = None,
-        chunk_size: int = 4096,
-        chunk_overlap: int = 512,
+        chunk_size: int = 1024,
+        chunk_overlap: int = 120,
+        #temperature = 0.0, # We no longer use temperature
+        pattern: Optional[str] = None,
         system_prompt: str = None,
         rag_data: list[str] = None, # Sources of data (file paths, URLs)
                                     # If docs is not None, this is ignored
         max_docs: int = 0,
         use_history: bool = False,
         max_history_len: int = 10,
-        ollama_host: str = "localhost", # Ollama host running LLM
-        ollama_port: int = 11434,
-        model = "gemma3n:e4b", # LLM model: "gemma3:latest", "gemma3:12b", ....
-        embeddings_model = "bge-m3:latest", # Embeddings model
-        temperature = 0.0,
     ):
-        # Initialize
-        self.llm = None
+
+        # Initialize data
         self.rag_data = rag_data
         self.use_history = use_history
         self.docs = None
@@ -67,9 +79,9 @@ class GemmaAi:
         self.chat_history = []
         self.chat_history_len = max_history_len
         self.embeddings = None
+        self.llm = None
         self.max_docs = max_docs
         self.db = None
-        ollama_base_url = f"http://{ollama_host}:{ollama_port}"
 
         if system_prompt is None:
             system_prompt = (
@@ -85,22 +97,20 @@ class GemmaAi:
                             chunk_size=chunk_size,
                             chunk_overlap=chunk_overlap)
             docs = docs_ctx.docs
-            #print(docs)
             combined_ctx = docs_ctx.combined_ctx
         self.docs = docs
         self.combined_ctx = combined_ctx
 
-        # Initialize llm
-        self.llm = llm = ChatOllama(
-                            model=model,
-                            base_url=ollama_base_url,
-                            )
+        # Initialize OpenAI
+        self.openai = OpenAI()
 
         # Initialize embeddings
-        self.embeddings = embeddings = OllamaEmbeddings(
-                                        model=embeddings_model,
-                                        base_url=ollama_base_url,
-                                        )
+        # Currently, default model seems to be "text-embedding-ada-002"
+        # Other options are: "text-embedding-3-large", "text-embedding-3-small"
+        embeddings = OpenAIEmbeddings()
+        #embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
+        #embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+        self.embeddings = embeddings
 
         # Initialize db
         chromadb.api.client.SharedSystemClient.clear_system_cache()
@@ -121,7 +131,7 @@ class GemmaAi:
             # Add docs to db
             try :
                 self.db.add_documents(docs)
-            except Exception as e:
+            except openai.RateLimitError as e:
                 logger.error("self.db.add_documents: " + str(e))
                 docs = None
                 k = 1
@@ -136,6 +146,10 @@ class GemmaAi:
 
         # Get retriever
         retriever = self.db.as_retriever(search_kwargs={"k": k})
+
+        # Initialize llm
+        llm = ChatOpenAI(model=DEFAULT_MODEL)
+        self.llm = llm
 
         # Set LCEL question system prompt template
         condense_question_system_template = (
@@ -165,7 +179,6 @@ class GemmaAi:
         )
 
         # Build LCEL chains
-        #logger.info("Building the retrieval chain ...")
         self.qa_chain = create_stuff_documents_chain(llm, qa_prompt)
 
         if use_history:
@@ -186,7 +199,7 @@ class GemmaAi:
     # Destructor
     def __del__(self):
         if logger is not None:
-            logger.info("Class MyAi is destroyed")
+            logger.info("Class GptAi is destroyed")
 
         # Delete this data from Chroma
         #if self.db is not None:
@@ -210,7 +223,7 @@ class GemmaAi:
                         {"input": query, "chat_history": []}
                     )
                 break
-            except Exception as e:
+            except openai.RateLimitError as e:
                 num_retries += 1
                 time.sleep(20)
 
@@ -227,10 +240,7 @@ class GemmaAi:
                 # Append answer to chat_history
                 self.chat_history.extend([HumanMessage(content=query), answer["answer"]])
 
-            if 'answer' in answer:
-                return answer['answer'].rstrip()
-            else:
-                return answer.rstrip()
+            return answer["answer"]
 
     # Vectorize RAG data
     # Caution! If merge_all_content is True, this returns array of vector
@@ -243,14 +253,14 @@ class GemmaAi:
                 content += r
             # This returns one vector, not array
             #return self.embeddings.embed_query(content)
-            return self.llm.embeddings.create(
+            return self.openai.embeddings.create(
                         input=[content],
                         model="text-embedding-3-small"
                         ).data[0].embedding
         else:
             # This returns array of vector
             #return self.embeddings.embed_documents(self.rag_content)
-            response = self.llm.embeddings.create(
+            response = self.openai.embeddings.create(
                         input=self.rag_content,
                         model="text-embedding-3-small"
                         )
@@ -258,7 +268,7 @@ class GemmaAi:
 
     # Vectorize given single data
     def vectorize(self, data):
-        return self.llm.embeddings.create(
+        return self.openai.embeddings.create(
                     input=[data],
                     model="text-embedding-3-small"
                     ).data[0].embedding
@@ -370,14 +380,6 @@ class GemmaAi:
     # Summarize entire document with refine technique
     def summarize_with_refine(self, prompt: str = None):
         # Refine chain - takes long long time
-        '''
-        # Custom question_prompt (used for first document)
-        question_prompt = PromptTemplate(
-            input_variables=["text"],
-            template="技術的な能力や功績に重点を置いて、以下をまとめて下さい。:\n{text}\n\n",
-        )
-        '''
-
         # Custom refine_prompt (used for each subsequent document)
         #refine_template = """
         #    Given the following existing answer: {existing_answer}
@@ -396,7 +398,7 @@ class GemmaAi:
         )
 
         # LLM model
-        #llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        #llm = ChatOpenAI(model="gpt-4o-mini")
 
         # Load refine chain
         chain = load_summarize_chain(
@@ -431,13 +433,13 @@ if __name__ == "__main__":
     )
 
     # Build knowledge base for admin manual
-    qa = GemmaAi(
-            chunk_size=4096,
-            chunk_overlap=512,
-            rag_data=rag_data,
-            system_prompt=system_prompt,
-            use_history=True
-        )
+    qa = GptAi(
+        chunk_size=1024,
+        chunk_overlap=128,
+        rag_data=rag_data,
+        system_prompt=system_prompt,
+        use_history=True
+    )
 
     # Ask question
     while True:
@@ -477,11 +479,10 @@ if __name__ == "__main__":
         # Print 'answer'
         if isinstance(res, dict):
             if 'answer' in res:
-                print(res['answer'].rstrip() + '\n')
+                print(res['answer'])
             else:
                 print("Error: Please specify key for 'res'")
         elif type(res) == str:
-            print(res.rstrip() + '\n')
+            print(res)
         else:
             print(f"Error: {type(res)} not supported")
-

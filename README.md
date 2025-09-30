@@ -1,13 +1,13 @@
 # chat_ai
 
-A powerful Chat AI with RAG, chat history, and context awareness.  Uses Gemma (via Ollama) and GPT models.  Loads data from TXT, PDF, DOC, CSV, web pages (HTML), spreadsheets (XLS), presentations (PPTX), and LibreOffice documents (ODT).  Offers vectorization, summarization (with/without RAG), and other helpful features.
+A powerful Chat AI with RAG, chat history, and context awareness.  Uses Gemma (via Ollama) and GPT LLM models.  Loads data from TXT, PDF, DOC, CSV, web pages (HTML), spreadsheets (XLS), presentations (PPTX), and LibreOffice documents (ODT).  Offers vectorization, summarization, and other helpful features.
 
 Note: This README is mostly generated with the programs in this repository.
 
 
 ## Prerequisites
 
-*gemma*.py programs rely on the following components:
+\*gemma\*.py programs rely on the following components:
 
 * **Ollama:** A tool for running large language models locally. Ensure Ollama is installed and running on your system (defaults to localhost).
 * **Gemini Model:** The program uses the `gemma3n:e4b` language model. This model must be downloaded and accessible within Ollama.
@@ -64,7 +64,9 @@ This example demonstrates how to use the program with RAG. It reads the content 
    python3 gemma_ai.py cats.txt
    ```
 
-This reads cats.txt and answers questions based on its content. Ask questions like "Who is the oldest cat in my house and how old is he?" You can also specify a URL:
+This reads cats.txt and answers questions based on its content. Ask questions like "Who is the oldest cat in my house and how old is he?"
+
+You can also specify a URL:
    ```bash
    python3 gemma_ai.py https://science.nasa.gov/solar-system/comets/3i-atlas/
    ```
