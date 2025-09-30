@@ -53,6 +53,7 @@ The program supports various data formats for RAG, including:
 ```python
 rag_data = ["aaa.pdf", "https://example.com", "bbb.doc"]
 llm = GemmaAi(rag_data=rag_data)
+answer = llm.ask("What is XXX?")
 ```
 
 **Explanation of Example:**
@@ -114,7 +115,8 @@ This program is an AI chat application designed to engage in conversations and a
 
 ```python
 rag_data = ["aaa.pdf", "https://example.com", "bbb.doc"]
-GptAi(rag_data=rag_data) 
+llm = GptAi(rag_data=rag_data)
+answer = llm.ask("What is XXX?")
 ```
 
 This example demonstrates how to provide the program with a mix of local files and a web link, allowing it to leverage information from all these sources when answering your questions. 
