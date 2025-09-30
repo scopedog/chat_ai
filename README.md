@@ -121,3 +121,26 @@ answer = llm.ask("What is XXX?")
 
 This example demonstrates how to provide the program with a mix of local files and a web link, allowing it to leverage information from all these sources when answering your questions. 
 
+
+## simple_gpt_ai.py
+Simple AI Chat Program using OpenAI GPT
+
+This program provides a simple way to ask questions based on a provided context. It leverages the OpenAI GPT models to answer your questions, drawing information from the context you give it.
+
+**Key Features:**
+
+*   **Context-Based Answers:**  The program answers questions based *solely* on the information you provide as context. It doesn't have memory of past conversations.
+*   **Simple Q&A:** Designed for straightforward question and answer interactions.
+*   **Context Flexibility:** You can feed the program information directly in the code, from a text file, or as a quoted block of text.
+*   **No Persistent Memory:**  The program doesn't remember previous questions or answers. Each session starts fresh with the provided context.
+
+**Example Usage:**
+
+To use the program, run it from the command line: `python3 simple_gpt_ai.py`
+
+You can then ask questions like: "List all male cats in my house."  The program will analyze the provided context and attempt to answer your question.
+
+**Intended Use:**
+
+This program is ideal for quick, one-off question-answering tasks where you want to leverage the power of GPT with a limited amount of context. It's not designed for complex, multi-turn conversations.
+
