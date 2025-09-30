@@ -99,3 +99,23 @@ A Japanese version of simple_gemma_ai.py. simple_gemma_ai.pyの日本語版。
 
 例として、`python3 simple_gemma_ai_ja.py`で走らせて、質問してみてください。我が家の猫に関する情報をコンテクストとして与えているので、「我が家でオスの猫は？」などの質問をしてみてください。
 
+
+## gpt_ai.py
+This program is an AI chat application designed to engage in conversations and answer your questions using powerful language models like GPT-4o-mini or GPT-5. 
+
+**Key Features:**
+
+* **Question Answering with Context:** It utilizes Retrieval-Augmented Generation (RAG) to answer your questions by drawing information from various sources.
+* **Memory:** The program remembers past conversations, allowing for more natural and contextually relevant interactions.
+* **Versatile Data Sources:** You can provide information from a wide range of file types (TXT, PDF, DOC, CSV, etc.) and web URLs (HTTP, HTML) to enhance the AI's knowledge.
+* **Easy to Use:** Simply pass a list of data sources to the `GptAi` function to enable RAG.
+
+**Example Usage:**
+
+```python
+rag_data = ["aaa.pdf", "https://example.com", "bbb.doc"]
+GptAi(rag_data=rag_data) 
+```
+
+This example demonstrates how to provide the program with a mix of local files and a web link, allowing it to leverage information from all these sources when answering your questions. 
+

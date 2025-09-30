@@ -420,7 +420,7 @@ class GptAi:
 
 # Main
 if __name__ == "__main__":
-    # Get RAG
+    # Get RAG data
     rag_data = None
     if len(sys.argv) > 1:
         rag_data = sys.argv[1:]
@@ -479,10 +479,10 @@ if __name__ == "__main__":
         # Print 'answer'
         if isinstance(res, dict):
             if 'answer' in res:
-                print(res['answer'])
+                print(res['answer'] + '\n')
             else:
                 print("Error: Please specify key for 'res'")
         elif type(res) == str:
-            print(res)
+            print(res + '\n')
         else:
             print(f"Error: {type(res)} not supported")
