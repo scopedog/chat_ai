@@ -1,6 +1,6 @@
 # chat_ai
 
-A powerful Chat AI with RAG, chat history, and context awareness.  Uses Gemma (via Ollama) and GPT LLM models.  Loads data from TXT, PDF, DOC, CSV, web pages (HTML), spreadsheets (XLS), presentations (PPTX), and LibreOffice documents (ODT).  Offers vectorization, summarization, and other helpful features.
+A powerful Chat AI with context, RAG and chat history awareness.  Uses Gemma (via Ollama) and GPT LLM models.  Loads data from TXT, PDF, DOC, CSV, web pages (HTML), spreadsheets (XLS), presentations (PPTX), and LibreOffice documents (ODT).  Offers vectorization, summarization, and other helpful features.
 
 Note: This README is mostly generated with the programs in this repository.
 
@@ -36,7 +36,7 @@ This program leverages the Google Gemma language model, accessed through Ollama,
 
 **RAG Data Sources:**
 
-The program supports various data formats for RAG, including:
+The program supports various data formats for context, including:
 
 *   TXT
 *   PDF
@@ -160,7 +160,7 @@ To use the program, run it from the command line:
 python3 simple_gpt_ai.py
 ```
 
-You can then ask questions like: "List all male cats in my house."  The program will analyze the provided context and attempt to answer your question.
+Brief information on my cats is given as context, and you can then ask questions like: "List all male cats in my house."  The program will analyze the provided context and attempt to answer your question.
 
 You can specify files and/or URLs as sources:
 
