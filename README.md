@@ -65,7 +65,7 @@ This example demonstrates how to use the program with RAG. It reads the content 
    python3 gemma_ai.py cats.txt
    ```
 
-This reads cats.txt and answers questions based on its content. Ask questions like "Who is the oldest cat in my house and how old is he?"
+This reads `cats.txt` and answers questions based on its content. Ask questions like "Who is the oldest cat in my house and how old is he?"
 
 You can also specify a URL:
    ```bash
@@ -73,6 +73,10 @@ You can also specify a URL:
    ```
 Ask "What is 3I/ATLAS?"
 
+Multiple sources are acceptable:
+   ```bash
+   python3 gemma_ai.py aaa.pdf bbb.docx https://www.example.com
+   ```
 
 ## simple_gemma_ai.py
 Simple AI Chat Program using Google Gemma via Ollama
@@ -81,14 +85,23 @@ This program provides a simple conversational interface powered by Google Gemma,
 
 **Key Features:**
 
-* **Contextual Question Answering:** Can answer questions based on provided context, quotes, or the content of a text file.
+* **Contextual Question Answering:** Can answer questions based on provided context, quotes, or the content of files and/or websites.
 * **Stateless Conversations:** This is designed for single-turn questions and answers; it does not retain information from previous interactions, i.e., does not remember past chat content.
 * **Ideal for Simple Q&A:** Best suited for straightforward questions and retrieving information.
 
 **How to Use:**
 
 * **Example Usage:** See the `ask_ai()` function in the Python code for an example of how to interact with the program.
-* **Start a Session:** Running the script with the command `python3 simple_gemma_ai.py` will initiate a simple question and answer session. You can then ask questions like "List all male cats in my house."
+* **Start a Session:** Running the script with the command:
+  ```bash
+  python3 simple_gemma_ai.py
+  ```
+  will initiate a simple question and answer session. You can then ask questions like "List all male cats in my house."
+* You can specify files and/or URLs as sources:
+  ```bash
+  python3 simple_gemma_ai.py aaa.pdf bbb.docx https://www.example.com
+  ```
+  but the context size must be lower than the LLM's context window size.
 
 **Underlying Technology:**
 
