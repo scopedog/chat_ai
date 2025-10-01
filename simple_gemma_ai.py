@@ -52,7 +52,7 @@ class SimpleGemmaAi:
             user_content = "Here is given information:\n" + user_content
             messages.append({"role": "system", "content": user_content})
 
-        # Append context_data conten
+        # Append content of context_data
         if bool(context_data):
             ctx = rag.load_data(data=context_data)
             user_content = "Here is additional information:\n" + ctx.combined_ctx

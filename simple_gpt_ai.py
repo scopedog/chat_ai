@@ -12,6 +12,7 @@ import sys
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from loguru import logger
+import rag
 
 # Global parameters
 DEFAULT_MODEL = "gpt-4o-mini" # Best cost performance
@@ -36,8 +37,8 @@ class SimpleGptAi:
             system_prompt: str = None,
             quote: str = None,
             context: str = None,
+            context_data: list[str] = None, # Ex. ["aaa.pdf", "https://example.com", "bbb.doc"]
             response_format: str = "text",
-            file: str = None, # Currently supports text file only
             model: str = DEFAULT_MODEL,
     ) -> str:
         # Intialize
@@ -54,20 +55,19 @@ class SimpleGptAi:
             user_content += context + "\n\n"
 
         if bool(user_content):
-            user_content = "Here is given information:\n" + user_content
+            user_content = "Here is given information:\n" + user_content + "\n\n"
 
-       # Append file content
-        if bool(file):
-            with open(file, "r", encoding="utf-8") as file:
-                file_content = file.read()
-                user_content += "\n\nHere is additional information:\n" + file_content
+       # Append content of context_data
+        if bool(context_data):
+            ctx = rag.load_data(data=context_data)
+            user_content += "Here is additional information:\n" + ctx.combined_ctx + "\n\n"
 
         # Set question
         if bool(user_content):
             messages = [
                     ("system", system_prompt),
                     ("human",
-                        f"Please answer questions based on the following context:\n{context}\n\nQeustion: {question}"
+                        f"Please answer questions based on the following context:\n{user_content}\n\nQeustion: {question}"
                     ),
             ]
         else:
@@ -84,6 +84,29 @@ class SimpleGptAi:
 
 # Ask question
 def ask_ai():
+    # Set system prompt
+    system_prompt = "You are a very kind assitant. Please answer user's questions."
+
+    # Get context data
+    context = None
+    context_data = None
+    if len(sys.argv) >  1:
+        # Use specified files/URLs as context
+        context_data = sys.argv[1:]
+
+        # Note if context_data is too large,
+        # AI will not answer correctly due to its context window size limit
+        
+        # To avoid to read specified files/URLs repeatedly, do following instead
+        '''
+        ctx = rag.load_data(data=context_data)
+        context = "Here is additional information:\n" + ctx.combined_ctx
+        context_data = None
+        '''
+    else:
+        # Set original context
+        context = "There are four cats in my house. The oldest is Kuro, and he is 14 years old. Sora is an 8-year-old sweet cat, and Billy was born in 2018. Shiro is the only female and was born in 2024. Billy is the only cat from outside the US."
+
     # Ask question
     while True:
         question = ''
@@ -104,9 +127,11 @@ def ask_ai():
                     # Ask question to AI
                     print("\n* Asking AI....")
                     answer = SimpleGptAi.ask(
-                                system_prompt="You are a very kind assistant. Please answer questions.",
-                                context = "There are four cats in my house. The oldest is Kuro, and he is 14 years old. Sora is an 8-year-old sweet cat, and Billy was born in 2018. Shiro is the only female and was born in 2024. Billy is the only cat from outside the US.",
-                                question=question)
+                                system_prompt=system_prompt,
+                                context=context,
+                                context_data=context_data,
+                                question=question,
+                                model="gpt-4o-mini")
 
                 break
 

@@ -61,6 +61,7 @@ answer = llm.ask("What is XXX?")
 This example demonstrates how to use the program with RAG. It reads the content from "aaa.pdf", accesses the content of the website "https://example.com", and reads "bbb.doc". The content from these sources is then used to inform the Gemma model's responses.
 
 **Exmaple usage:**
+
    ```bash
    python3 gemma_ai.py cats.txt
    ```
@@ -68,12 +69,14 @@ This example demonstrates how to use the program with RAG. It reads the content 
 This reads `cats.txt` and answers questions based on its content. Ask questions like "Who is the oldest cat in my house and how old is he?"
 
 You can also specify a URL:
+
    ```bash
    python3 gemma_ai.py https://science.nasa.gov/solar-system/comets/3i-atlas/
    ```
 Ask "What is 3I/ATLAS?"
 
 Multiple sources are acceptable:
+
    ```bash
    python3 gemma_ai.py aaa.pdf bbb.docx https://www.example.com
    ```
@@ -93,11 +96,13 @@ This program provides a simple conversational interface powered by Google Gemma,
 
 * **Example Usage:** See the `ask_ai()` function in the Python code for an example of how to interact with the program.
 * **Start a Session:** Running the script with the command:
+
   ```bash
   python3 simple_gemma_ai.py
   ```
   will initiate a simple question and answer session. You can then ask questions like "List all male cats in my house."
 * You can specify files and/or URLs as sources:
+
   ```bash
   python3 simple_gemma_ai.py aaa.pdf bbb.docx https://www.example.com
   ```
@@ -149,9 +154,20 @@ This program provides a simple way to ask questions based on a provided context.
 
 **Example Usage:**
 
-To use the program, run it from the command line: `python3 simple_gpt_ai.py`
+To use the program, run it from the command line:
+
+```bash
+python3 simple_gpt_ai.py
+```
 
 You can then ask questions like: "List all male cats in my house."  The program will analyze the provided context and attempt to answer your question.
+
+You can specify files and/or URLs as sources:
+
+```bash
+python3 simple_gpt_ai.py aaa.pdf bbb.docx https://www.example.com
+```
+but the context size must be lower than the LLM's context window size.
 
 **Intended Use:**
 
