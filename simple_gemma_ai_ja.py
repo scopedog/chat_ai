@@ -7,10 +7,12 @@
 # また、python3 simple_gemma_ai_ja.py で日本語によるシンプルな受け答えを開始します
 # 猫に関する情報がコンテクストとして与えられているので、「我が家でオスの猫は？」などと質問してみてください
 #
+import sys
 import json
 from enum import Enum
 import ollama
 from ollama import Client
+import rag
 
 # Class SimpleGemmaAi
 class SimpleGemmaAi:
@@ -20,8 +22,8 @@ class SimpleGemmaAi:
         system_prompt: str = "",
         quote: str = None,
         context: str = None,
+        context_data: list[str] = None, # Ex. ["aaa.pdf", "https://example.com", "bbb.doc"]
         response_format: str = "text",
-        file: str = None, # Currently supports text file only
         ollama_host: str = "localhost", # Ollama host running LLM
         ollama_port: int = 11434,
         model = "gemma3n:e4b", # LLM model: "gemma3:latest", "gemma3:12b", ....
@@ -51,12 +53,11 @@ class SimpleGemmaAi:
             user_content = "Here is given information:\n" + user_content
             messages.append({"role": "system", "content": user_content})
 
-        # Append file content
-        if bool(file):
-            with open(file, "r", encoding="utf-8") as file:
-                file_content = file.read()
-                user_content = "Here is additional information:\n" + file_content
-                messages.append({"role": "system", "content": user_content})
+        # Append context_data conten
+        if bool(context_data):
+            ctx = rag.load_data(data=context_data)
+            user_content = "Here is additional information:\n" + ctx.combined_ctx
+            messages.append({"role": "system", "content": user_content})
 
         # Set quesiotn
         user_question = "The following is my question:\n" + question
@@ -77,10 +78,32 @@ class SimpleGemmaAi:
 
 # Ask AI
 def ask_ai():
+    # Set system prompt
+    system_prompt = "あなたは優しくて何でも知っています。質問に日本語で答えて下さい。"
+
+    # Get context data
+    context = None
+    context_data = None
+    if len(sys.argv) > 1:
+        # Use specified files/URLs as context
+        context_data = sys.argv[1:]
+
+        # Note if context_data is too large, 
+        # AI will not answer correctly due to its context window size limit 
+
+        # To avoid to read specified files/URLs repeatedly, do following instead
+        '''
+        ctx = rag.load_data(data=context_data)
+        context = "Here is additional information:\n" + ctx.combined_ctx
+        context_data = None
+        '''
+    else:
+        # Set original context
+        context = "我が家には4匹の猫がいます。猫の名前は「クロ」「ソラ」「ビリー」「シロ」で、シロだけがメスです。\nクロは乱暴で、ソラは食いしん坊で、ビリーはフレンドリー、シロはいつも天井をキョロキョロ眺めています。\nクロは14歳で、ソラは8歳、ビリーは7歳、シロは1歳です。ビリーだけが国外で生まれました。"
+
     # Ask question
     while True:
         question = ''
-        res = None
         terminate = False
         print("\n- 質問を入力してください。複数行でもOKです。\n" +
               "- 質問入力後、Enterを押し、Ctrl-Dを押すとAIが質問に答えます。\n" +
@@ -98,10 +121,11 @@ def ask_ai():
                     terminate = True
                 else:
                     # Ask question to AI
-                    print("\n* AIに問い合わせ中....")
+                    print("\n* Asking AI....")
                     answer = SimpleGemmaAi.ask(
-                                system_prompt="あなたは優しくて何でも知っています。質問に日本語で答えて下さい。",
-                                context="我が家には4匹の猫がいます。猫の名前は「クロ」「ソラ」「ビリー」「シロ」で、シロだけがメスです。\nクロは乱暴で、ソラは食いしん坊で、ビリーはフレンドリー、シロはいつも天井をキョロキョロ眺めています。\nクロは14歳で、ソラは8歳、ビリーは7歳、シロは1歳です。",
+                                system_prompt=system_prompt,
+                                context=context,
+                                context_data=context_data,
                                 question=question,
                                 ollama_host="localhost",
                                 model="gemma3n:e4b",)
