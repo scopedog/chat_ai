@@ -49,7 +49,7 @@ class GemmaAi:
         rag_data: list[str] = None, # Sources of data (file paths, URLs)
                                     # If docs is not None, this is ignored
         max_docs: int = 0,
-        use_history: bool = False,
+        use_history: bool = True,
         max_history_len: int = 10,
         ollama_host: str = "localhost", # Ollama host running LLM
         ollama_port: int = 11434,
@@ -122,7 +122,7 @@ class GemmaAi:
             try :
                 self.db.add_documents(docs)
             except Exception as e:
-                logger.error("self.db.add_documents: " + str(e))
+                logger.error(f"self.db.add_documents: {e}")
                 docs = None
                 k = 1
             else:

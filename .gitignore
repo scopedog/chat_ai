@@ -208,3 +208,7 @@ __marimo__/
 
 # vi
 *.swp
+
+# chainlit
+.chainlit/
+chainlit.md

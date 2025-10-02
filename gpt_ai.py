@@ -65,7 +65,7 @@ class GptAi:
         rag_data: list[str] = None, # Sources of data (file paths, URLs)
                                     # If docs is not None, this is ignored
         max_docs: int = 0,
-        use_history: bool = False,
+        use_history: bool = True,
         max_history_len: int = 10,
     ):
 
