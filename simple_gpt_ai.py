@@ -12,7 +12,7 @@ import sys
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from loguru import logger
-import rag
+import ctx_dat
 
 # Global parameters
 DEFAULT_MODEL = "gpt-4o-mini" # Best cost performance
@@ -59,7 +59,7 @@ class SimpleGptAi:
 
        # Append content of context_data
         if bool(context_data):
-            ctx = rag.load_data(data=context_data)
+            ctx = ctx_dat.load_data(data=context_data)
             user_content += "Here is additional information:\n" + ctx.combined_ctx + "\n\n"
 
         # Set question
@@ -99,7 +99,7 @@ def ask_ai():
         
         # To avoid to read specified files/URLs repeatedly, do following instead
         '''
-        ctx = rag.load_data(data=context_data)
+        ctx = ctx_dat.load_data(data=context_data)
         context = "Here is additional information:\n" + ctx.combined_ctx
         context_data = None
         '''

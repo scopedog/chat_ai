@@ -4,8 +4,8 @@
 # See example usage of GemmaAi at the bottom of this program after if __name__ == "__main__":
 # You can use TXT, PDF, DOC, CSV, WEB (http), HTML, XLS, PPTX, ODT (LibreOffice) for RAG.
 # For example:
-#   rag_data = ["aaa.pdf", "https://example.com", "bbb.doc"]
-#   GemmaAi(rag_data=rag_data)
+#   context_data = ["aaa.pdf", "https://example.com", "bbb.doc"]
+#   GemmaAi(context_data=context_data)
 # This reads "aaa.pdf" and "bbb.doc" files and also accesses https://example.com, then uses their content with RAG.
 
 import os
@@ -17,7 +17,7 @@ import string
 #from dotenv import load_dotenv
 from loguru import logger
 from typing import Optional
-import rag
+import ctx_dat
 
 # Load OpenAI key, etc
 #load_dotenv()
@@ -46,7 +46,7 @@ class GemmaAi:
         chunk_size: int = 4096,
         chunk_overlap: int = 512,
         system_prompt: str = None,
-        rag_data: list[str] = None, # Sources of data (file paths, URLs)
+        context_data: list[str] = None, # Sources of data (file paths, URLs)
                                     # If docs is not None, this is ignored
         max_docs: int = 0,
         use_history: bool = True,
@@ -59,7 +59,7 @@ class GemmaAi:
     ):
         # Initialize
         self.llm = None
-        self.rag_data = rag_data
+        self.context_data = context_data
         self.use_history = use_history
         self.docs = None
         self.combined_ctx = None
@@ -78,10 +78,10 @@ class GemmaAi:
                 "{context}"
             )
 
-        # Load RAG files, URLs
-        if not bool(docs) and rag_data is not None:
-            docs_ctx = rag.load_data(
-                            data=rag_data,
+        # Load context files, URLs
+        if not bool(docs) and context_data is not None:
+            docs_ctx = ctx_dat.load_data(
+                            data=context_data,
                             chunk_size=chunk_size,
                             chunk_overlap=chunk_overlap)
             docs = docs_ctx.docs
@@ -112,9 +112,9 @@ class GemmaAi:
                          #client=self.db_client)
                          )
 
-        # Add docs, create rag_content, etc 
+        # Add docs, create context_content, etc 
         k = 4
-        self.rag_content = []
+        self.context_content = []
         docs_len = len(docs)
         logger.debug("docs_len: " + str(docs_len))
         if docs_len > 0:
@@ -130,9 +130,9 @@ class GemmaAi:
                 if docs_len < 4:
                     k = docs_len
 
-                # Save page_content as rag_content for vectorizing
+                # Save page_content as context_content for vectorizing
                 for doc in docs:
-                    self.rag_content.append(doc.page_content)
+                    self.context_content.append(doc.page_content)
 
         # Get retriever
         retriever = self.db.as_retriever(search_kwargs={"k": k})
@@ -232,14 +232,14 @@ class GemmaAi:
             else:
                 return answer.rstrip()
 
-    # Vectorize RAG data
+    # Vectorize context data
     # Caution! If merge_all_content is True, this returns array of vector
     # If merge_all_content is False, it returns one vector (not array)
-    def vectorize_rag(self, merge_all_content=False):
+    def vectorize_context(self, merge_all_content=False):
         # Merge all content and create one page content
         if merge_all_content:
             content = ""
-            for r in self.rag_content:
+            for r in self.context_content:
                 content += r
             # This returns one vector, not array
             #return self.embeddings.embed_query(content)
@@ -249,9 +249,9 @@ class GemmaAi:
                         ).data[0].embedding
         else:
             # This returns array of vector
-            #return self.embeddings.embed_documents(self.rag_content)
+            #return self.embeddings.embed_documents(self.context_content)
             response = self.llm.embeddings.create(
-                        input=self.rag_content,
+                        input=self.context_content,
                         model="text-embedding-3-small"
                         )
             vectors = [d.embedding for d in response.data] 
@@ -425,16 +425,16 @@ if __name__ == "__main__":
         "{context}"
     )
 
-    # Get RAG context
-    rag_data = None
+    # Get context context
+    context_data = None
     if len(sys.argv) > 1:
-        rag_data = sys.argv[1:]
+        context_data = sys.argv[1:]
 
     # Build knowledge base for admin manual
     qa = GemmaAi(
             chunk_size=4096,
             chunk_overlap=512,
-            rag_data=rag_data,
+            context_data=context_data,
             system_prompt=system_prompt,
             use_history=True
         )

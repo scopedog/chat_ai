@@ -12,7 +12,7 @@ import json
 from enum import Enum
 import ollama
 from ollama import Client
-import rag
+import ctx_dat
 
 # Class SimpleGemmaAi
 class SimpleGemmaAi:
@@ -55,7 +55,7 @@ class SimpleGemmaAi:
 
         # Append content of context_data
         if bool(context_data):
-            ctx = rag.load_data(data=context_data)
+            ctx = ctx_dat.load_data(data=context_data)
             user_content = "Here is additional information:\n" + ctx.combined_ctx
             messages.append({"role": "system", "content": user_content})
 
@@ -93,7 +93,7 @@ def ask_ai():
 
         # To avoid to read specified files/URLs repeatedly, do following instead
         '''
-        ctx = rag.load_data(data=context_data)
+        ctx = ctx_dat.load_data(data=context_data)
         context = "Here is additional information:\n" + ctx.combined_ctx
         context_data = None
         '''

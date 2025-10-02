@@ -34,7 +34,7 @@ This program leverages the Google Gemma language model, accessed through Ollama,
 *   **Memory:** Remembers past chat content for more contextual conversations.
 *   **General Q&A and Chatting:** Suitable for a wide range of general question answering and conversational tasks.
 
-**RAG Data Sources:**
+**Context (RAG) Data Sources:**
 
 The program supports various data formats for context, including:
 
@@ -51,8 +51,8 @@ The program supports various data formats for context, including:
 **Example Usage:**
 
 ```python
-rag_data = ["aaa.pdf", "https://example.com", "bbb.doc"]
-llm = GemmaAi(rag_data=rag_data)
+context_data = ["aaa.pdf", "https://example.com", "bbb.doc"]
+llm = GemmaAi(context_data=context_data)
 answer = llm.ask("What is XXX?")
 ```
 
@@ -163,8 +163,8 @@ This program is an AI chat application designed to engage in conversations and a
 **Example Usage:**
 
 ```python
-rag_data = ["aaa.pdf", "https://example.com", "bbb.doc"]
-llm = GptAi(rag_data=rag_data)
+context_data = ["aaa.pdf", "https://example.com", "bbb.doc"]
+llm = GptAi(context_data=context_data)
 answer = llm.ask("What is XXX?")
 ```
 
@@ -238,7 +238,6 @@ This project provides a simple web-based AI assistant built with [Chainlit](http
 **How It Works**
 1. On chat start, the assistant sends a friendly welcome message.
 2. When a message is received:
-   - If files are attached, the assistant notifies the user that file handling is not yet supported.
    - The user’s message is forwarded to the GPT AI backend.
    - The GPT-generated reply is displayed in the Chainlit UI.
 

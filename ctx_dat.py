@@ -56,7 +56,7 @@ class CtxDocs:
         self.docs = docs
         self.combined_ctx = combined_ctx
 
-# Load RAG data
+# Load context data
 def load_data(
               data: list[str] = None, # Files, URLs
               raw_data: list[str] = None, # Raw text, html, ...
@@ -104,7 +104,7 @@ def load_data(
 
     return CtxDocs(docs=docs, combined_ctx=combined_ctx)
 
-# Load RAG files
+# Load context files
 def load_files(files: list[str],
                chunk_size = 1024,
                chunk_overlap = 120):
@@ -127,17 +127,17 @@ def load_files(files: list[str],
                         add_start_index=True,
                         ) 
 
-    # Load RAG files
-    for rag_file in files:
-        if rag_file is not None:
-            load_rag_file(rag_file=rag_file, docs=docs)
+    # Load context files
+    for ctx_file in files:
+        if ctx_file is not None:
+            load_ctx_file(ctx_file=ctx_file, docs=docs)
 
     # docs can be empty
     if len(docs) == 0:
         # If empty, add dummy doc
         doc = Document(
                 page_content="",
-                metadata={"source": "rag.py",
+                metadata={"source": "ctx_dat.py",
                           "page": 1,
                           "author": "HN"}
              )
@@ -159,17 +159,17 @@ def load_files(files: list[str],
     #return docs, combined_ctx
     return CtxDocs(docs=docs, combined_ctx=combined_ctx)
  
-# Load RAG file
+# Load context file
 # This doesn't split text
-def load_rag_file(rag_file: str, docs):
-    file = Path(rag_file)
+def load_ctx_file(ctx_file: str, docs):
+    file = Path(ctx_file)
     if not file.is_file():
-        logger.warning("Cannot open " + rag_file)
+        logger.warning("Cannot open " + ctx_file)
         return
  
     # Check file type and load
     try:
-        f = open(rag_file, "rb")
+        f = open(ctx_file, "rb")
     except FileNotFoundError as e:
         loggoer.error(e)
         return
@@ -180,12 +180,12 @@ def load_rag_file(rag_file: str, docs):
 
     # PDF
     if info.extension_matches("pdf"):
-        logger.info("RAG file " + rag_file + " was detected as a PDF file")
+        logger.info("Context file " + ctx_file + " was detected as a PDF file")
 
         # We first use PyPDFLoader
         # This is good for retrieving data that are not included in tables
         '''
-        loader = PyPDFLoader(rag_file)
+        loader = PyPDFLoader(ctx_file)
         #load_pages_and_append(loader, docs)
         for page in loader.lazy_load():
             docs.append(page)
@@ -193,7 +193,7 @@ def load_rag_file(rag_file: str, docs):
         '''
 
         # Use pdfplumber
-        load_pdf_and_append(rag_file, docs)
+        load_pdf_and_append(ctx_file, docs)
         #print(docs)
         '''
         '''
@@ -201,18 +201,18 @@ def load_rag_file(rag_file: str, docs):
     # XLS, XLSX
     # Caution! Put this before DOC as xlsx is detected as DOC
     elif info.extension_matches("xls") or info.extension_matches("xlsx"):
-        logger.info("RAG file " + rag_file + " was detected as an XLS/XLSX file")
+        logger.info("Context file " + ctx_file + " was detected as an XLS/XLSX file")
         # UnstructuredExcelLoader
         # For Gemma, this seems to be better than panda
-        loader = UnstructuredExcelLoader(rag_file, mode="elements")
-        #loader = UnstructuredExcelLoader(rag_file)
+        loader = UnstructuredExcelLoader(ctx_file, mode="elements")
+        #loader = UnstructuredExcelLoader(ctx_file)
         load_pages_and_append(loader, docs)
         #print(docs)
 
         '''
         # pandas -- seems better than UnstructuredExcelLoader
-        df = pd.read_excel(rag_file)
-        docs_ = [Document(page_content=df.to_string(), metadata={"source": rag_file})]
+        df = pd.read_excel(ctx_file)
+        docs_ = [Document(page_content=df.to_string(), metadata={"source": ctx_file})]
         #print("docs_len: " + str(len(docs)))
         for doc in docs_:
             docs.append(doc)
@@ -220,54 +220,54 @@ def load_rag_file(rag_file: str, docs):
         
     # DOCX
     elif info.extension_matches("docx"):
-        logger.info("RAG file " + rag_file + " was detected as a DOCX file")
+        logger.info("Context file " + ctx_file + " was detected as a DOCX file")
 
         # Use UnstructuredWordDocumentLoader first
-        loader = UnstructuredWordDocumentLoader(rag_file)
+        loader = UnstructuredWordDocumentLoader(ctx_file)
         load_pages_and_append(loader, docs)
 
         # Retrieve tables and append
-        tables = extract_tables_from_docx(rag_file)
-        load_tables_and_append(tables=tables, docs=docs, file_name=rag_file)
+        tables = extract_tables_from_docx(ctx_file)
+        load_tables_and_append(tables=tables, docs=docs, file_name=ctx_file)
 
     # DOC
     elif info.extension_matches("doc"):
-        logger.info("RAG file " + rag_file + " was detected as a DOC file")
-        #loader = Document(rag_file)
-        loader = UnstructuredWordDocumentLoader(rag_file)
+        logger.info("Context file " + ctx_file + " was detected as a DOC file")
+        #loader = Document(ctx_file)
+        loader = UnstructuredWordDocumentLoader(ctx_file)
         load_pages_and_append(loader, docs)
 
     # ODT
     elif info.extension_matches("odt"):
-        logger.info("RAG file " + rag_file + " was detected as an ODT file")
+        logger.info("Context file " + ctx_file + " was detected as an ODT file")
 
         # Use UnstructuredODTLoader first
-        #loader = UnstructuredODTLoader(rag_file, mode="elements") # This doesn't work?
-        loader = UnstructuredODTLoader(rag_file)
+        #loader = UnstructuredODTLoader(ctx_file, mode="elements") # This doesn't work?
+        loader = UnstructuredODTLoader(ctx_file)
         load_pages_and_append(loader, docs)
 
         # Retrieve tables and append
-        #tables = extract_tables_from_odt(rag_file)
+        #tables = extract_tables_from_odt(ctx_file)
         #load_tables_and_append(tables, docs)
 
     # PPTX, HTML
     elif info.extension_matches("pptx") or info.extension_matches("html"):
-        logger.info("RAG file " + rag_file + " was detected as a PPTX/HTML file")
-        loader = DoclingLoader(rag_file)
+        logger.info("Context file " + ctx_file + " was detected as a PPTX/HTML file")
+        loader = DoclingLoader(ctx_file)
         load_pages_and_append(loader, docs)
 
     # CSV
     elif info.extension_matches("csv"):
-        logger.info("RAG file " + rag_file + " was detected as a CSV file")
-        loader = UnstructuredExcelLoader(rag_file)
+        logger.info("Context file " + ctx_file + " was detected as a CSV file")
+        loader = UnstructuredExcelLoader(ctx_file)
         #load_pages_and_append(loader, docs)
         for page in loader.lazy_load():
             docs.append(page)
     # Other: we regard as text file
-    #elif rag_file.lower().endswith(".txt"):
+    #elif ctx_file.lower().endswith(".txt"):
     else:
-        logger.info("RAG file " + rag_file + " was detected as a TXT file")
-        loader = TextLoader(rag_file)
+        logger.info("Context file " + ctx_file + " was detected as a TXT file")
+        loader = TextLoader(ctx_file)
         #load_pages_and_append(loader, docs)
         for page in loader.lazy_load():
             page.page_content = page.page_content.replace("　", " ")
