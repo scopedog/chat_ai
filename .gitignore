@@ -211,7 +211,9 @@ __marimo__/
 
 # Chainlit
 .chainlit/
+.files/
 chainlit.md
 
 # Misc
 pipreqs.sh
+

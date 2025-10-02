@@ -128,7 +128,7 @@ When you run the program with Chainlit, it starts a lightweight web application 
 **Features**
 - **Interactive Chat**: Type messages in the browser and receive AI responses.  
 - **Conversation Context**: The assistant keeps track of the conversation history (`use_history=True`).  
-- **File Attachments**: If you upload a file in the chat, the program detects it and notifies you.  
+- **File Attachments**: If files are attached, it is added as additional context.
 - **Web Interface**: Runs locally, accessible via a browser.  
 
 **How It Works**
@@ -232,7 +232,7 @@ This project provides a simple web-based AI assistant built with [Chainlit](http
 **Features**
 - **Interactive Chat UI**: Runs a local web app where users can chat with an AI assistant.
 - **Context-Aware Responses**: Maintains conversation history (`use_history=True`) so the assistant can respond with context from previous messages.
-- **File Attachment Handling**: Detects when files are attached in a chat message and informs the user (future support planned).
+- **File Attachments**: If files are attached, it is added as additional context.
 - **Custom AI Backend**: Uses a `GptAi` class that encapsulates interaction with a GPT model.
 
 **How It Works**

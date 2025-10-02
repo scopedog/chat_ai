@@ -21,6 +21,7 @@
 
 import chainlit as cl
 from gemma_ai import GemmaAi
+import ctx_dat
 
 # Initialize GemmaAi
 ai = GemmaAi()
@@ -33,14 +34,13 @@ async def on_chat_start():
 
 @cl.on_message
 async def on_message(message: cl.Message):
-    reply = ""
-
     # Check if any files are attached
     if message.elements:
-        reply += "Sorry, we cannot currently handle attached files!\nWe will definitely support the feature soon.\n\n"
+        context_data = [element.path for element in message.elements]
+        ai.add_context_data(context_data=context_data)
 
     # Ask AI
-    reply += ai.ask(message.content)
+    reply = ai.ask(message.content)
 
     # Send back to Chainlit frontend
     await cl.Message(content=reply).send()

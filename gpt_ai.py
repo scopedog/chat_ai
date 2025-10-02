@@ -55,7 +55,7 @@ class GptAi:
     def __init__(
         self,
         docs: list[Document] = [], # Split documents
-        combined_ctx: str = None,
+        combined_ctx: str = "",
         chunk_size: int = 1024,
         chunk_overlap: int = 120,
         #temperature = 0.0, # We no longer use temperature
@@ -72,7 +72,7 @@ class GptAi:
         self.context_data = context_data
         self.use_history = use_history
         self.docs = None
-        self.combined_ctx = None
+        self.combined_ctx = ""
         data = []
         self.chat_history = []
         self.chat_history_len = max_history_len
@@ -80,6 +80,8 @@ class GptAi:
         self.llm = None
         self.max_docs = max_docs
         self.db = None
+        self.chunk_size = chunk_size
+        self.chunk_overlap = chunk_overlap
 
         if system_prompt is None:
             system_prompt = (
@@ -415,6 +417,20 @@ class GptAi:
             raise Exception(e)
 
         return res['output_text']
+
+    # Add context data
+    def add_context_data(self, context_data: list[str]):
+        docs_ctx = ctx_dat.load_data(
+                        data=context_data,
+                        chunk_size=self.chunk_size,
+                        chunk_overlap=self.chunk_overlap)
+        docs = docs_ctx.docs
+        self.db.add_documents(docs)
+        #print(docs)
+        self.docs.extend(docs)
+        self.combined_ctx += docs_ctx.combined_ctx
+
+        return docs_ctx
 
 # Main
 if __name__ == "__main__":
