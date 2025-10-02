@@ -162,7 +162,7 @@ python3 simple_gpt_ai.py
 
 Brief information on my cats is given as context, and you can then ask questions like: "List all male cats in my house."  The program will analyze the provided context and attempt to answer your question.
 
-You can specify files and/or URLs as sources:
+You can also specify files and/or URLs as sources:
 
 ```bash
 python3 simple_gpt_ai.py aaa.pdf bbb.docx https://www.example.com
@@ -176,7 +176,7 @@ This program is ideal for quick, one-off question-answering tasks where you want
 
 ## gemma_ui_chat.py
 
-This program provides a simple web-based chat interface using **[Chainlit](https://docs.chainlit.io/)** and **Gemma**, an open-source large language model.  
+This program provides a simple web-based chat interface using **[Chainlit](https://docs.chainlit.io/)** and **GemmaAi**.  
 
 When you run the program with Chainlit, it starts a lightweight web application where you can chat with the Gemma AI assistant in real time.
 
