@@ -1,29 +1,29 @@
 #
-# This script sets up a simple AI assistant using Chainlit and Gemma.
+# This script sets up a simple AI assistant using Chainlit and GPT.
 #
-# It initializes a Gemma model and defines event handlers for starting a chat 
+# It initializes a GPT model and defines event handlers for starting a chat 
 # and handling incoming messages.
 #
 # - On chat start: the assistant sends a welcome message to the user.
 # - On receiving a message: it checks for file attachments and notifies the user 
-#   if any are found. It then forwards the user’s message to the Gemma AI for 
+#   if any are found. It then forwards the user’s message to the GPT AI for 
 #   processing, and finally displays the AI’s response in the Chainlit chat interface.
 #
-# The GemmaAI instance is initialized with `use_history=True`, allowing the assistant 
+# The GptAI instance is initialized with `use_history=True`, allowing the assistant 
 # to retain conversation context across turns.
 #
 # To run:
-#     chainlit run gemma_ui_chat.py -h --host 0.0.0.0
+#     chainlit run gpt_ui_chat.py -h --host 0.0.0.0
 #
 # Then open your browser (if running on host 192.168.0.55, for example):
 #     http://192.168.0.55:8000
 #
 
 import chainlit as cl
-from gemma_ai import GemmaAi
+from gpt_ai import GptAi
 
-# Initialize GemmaAi
-ai = GemmaAi()
+# Initialize GptAi
+ai = GptAi()
 
 @cl.on_chat_start
 async def on_chat_start():

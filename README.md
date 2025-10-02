@@ -119,6 +119,37 @@ A Japanese version of simple_gemma_ai.py. simple_gemma_ai.pyの日本語版。
 例として、`python3 simple_gemma_ai_ja.py`で走らせて、質問してみてください。我が家の猫に関する情報をコンテクストとして与えているので、「我が家でオスの猫は？」などの質問をしてみてください。
 
 
+## gemma_ui_chat.py
+
+This program provides a simple web-based chat interface using **[Chainlit](https://docs.chainlit.io/)** and **GemmaAi**.  
+
+When you run the program with Chainlit, it starts a lightweight web application where you can chat with the Gemma AI assistant in real time.
+
+### Features
+- **Interactive Chat**: Type messages in the browser and receive AI responses.  
+- **Conversation Context**: The assistant keeps track of the conversation history (`use_history=True`).  
+- **File Attachments**: If you upload a file in the chat, the program detects it and notifies you.  
+- **Web Interface**: Runs locally, accessible via a browser.  
+
+### How It Works
+1. The program initializes a `GemmaAI` instance with conversation history enabled.  
+2. On chat start, it displays a welcome message.  
+3. When you send a message:
+   - If a file is attached, it acknowledges the file.  
+   - It sends your message to the Gemma model for processing.  
+   - The AI’s reply is streamed back and displayed in the Chainlit UI.  
+
+### Running the Program
+Start the server with:
+
+```bash
+chainlit run gemma_ui_chat.py -h --host 0.0.0.0
+```
+
+Then access `http://192.168.0.55:8000` with your browser (replace the IP with your host).
+You can now interact with the Gemma AI assistant through a simple web UI.
+
+
 ## gpt_ai.py
 This program is an AI chat application designed to engage in conversations and answer your questions using powerful language models like GPT-4o-mini or GPT-5. 
 
@@ -194,32 +225,28 @@ but the context size must be lower than the LLM's context window size.
 This program is ideal for quick, one-off question-answering tasks where you want to leverage the power of GPT with a limited amount of context. It's not designed for complex, multi-turn conversations.
 
 
-## gemma_ui_chat.py
+## gpt_ui_chat.py
 
-This program provides a simple web-based chat interface using **[Chainlit](https://docs.chainlit.io/)** and **GemmaAi**.  
+This project provides a simple web-based AI assistant built with [Chainlit](https://docs.chainlit.io/) and a custom GPT wrapper (`GptAi`).  
 
-When you run the program with Chainlit, it starts a lightweight web application where you can chat with the Gemma AI assistant in real time.
+**Features**
+- **Interactive Chat UI**: Runs a local web app where users can chat with an AI assistant.
+- **Context-Aware Responses**: Maintains conversation history (`use_history=True`) so the assistant can respond with context from previous messages.
+- **File Attachment Handling**: Detects when files are attached in a chat message and informs the user (future support planned).
+- **Custom AI Backend**: Uses a `GptAi` class that encapsulates interaction with a GPT model.
 
-### Features
-- **Interactive Chat**: Type messages in the browser and receive AI responses.  
-- **Conversation Context**: The assistant keeps track of the conversation history (`use_history=True`).  
-- **File Attachments**: If you upload a file in the chat, the program detects it and notifies you.  
-- **Web Interface**: Runs locally, accessible via a browser.  
+**How It Works**
+1. On chat start, the assistant sends a friendly welcome message.
+2. When a message is received:
+   - If files are attached, the assistant notifies the user that file handling is not yet supported.
+   - The user’s message is forwarded to the GPT AI backend.
+   - The GPT-generated reply is displayed in the Chainlit UI.
 
-### How It Works
-1. The program initializes a `GemmaAI` instance with conversation history enabled.  
-2. On chat start, it displays a welcome message.  
-3. When you send a message:
-   - If a file is attached, it acknowledges the file.  
-   - It sends your message to the Gemma model for processing.  
-   - The AI’s reply is streamed back and displayed in the Chainlit UI.  
-
-### Running the Program
-Start the server with:
-
+**Usage**
+Run the Chainlit app with:
 ```bash
-chainlit run gemma_ui_chat.py -h --host 0.0.0.0
-```
+chainlit run gpt_ui_chat.py -h --host 0.0.0.0
+'''
 
 Then access `http://192.168.0.55:8000` with your browser (replace the IP with your host).
-You can now interact with the Gemma AI assistant through a simple web UI.
+

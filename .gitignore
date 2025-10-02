@@ -209,6 +209,9 @@ __marimo__/
 # vi
 *.swp
 
-# chainlit
+# Chainlit
 .chainlit/
 chainlit.md
+
+# Misc
+pipreqs.sh
