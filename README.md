@@ -139,6 +139,26 @@ answer = llm.ask("What is XXX?")
 
 This example demonstrates how to provide the program with a mix of local files and a web link, allowing it to leverage information from all these sources when answering your questions. 
 
+**Exmaple usage:**
+
+   ```bash
+   python3 gpt_ai.py cats.txt
+   ```
+
+This reads `cats.txt` and answers questions based on its content. Ask questions like "Who is the oldest cat in my house and how old is he?"
+
+You can also specify a URL:
+
+   ```bash
+   python3 gpt_ai.py https://science.nasa.gov/solar-system/comets/3i-atlas/
+   ```
+Ask "What is 3I/ATLAS?"
+
+Multiple sources are acceptable:
+
+   ```bash
+   python3 gpt_ai.py aaa.pdf bbb.docx https://www.example.com
+   ```
 
 ## simple_gpt_ai.py
 Simple AI Chat Program using OpenAI GPT
