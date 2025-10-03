@@ -108,6 +108,12 @@ This program provides a simple conversational interface powered by Google Gemma,
   ```
   but the context size must be lower than the LLM's context window size.
 
+  For example,
+  ```bash
+  python3 simple_gemma_ai.py https://mechabay.com/about-armored-trooper-votoms
+  ```
+  and ask "What is VOTOMS and how tall is Scopedog?"
+
 **Underlying Technology:**
 
 This program leverages the Google Gemma language model, which is run locally using the Ollama library.
