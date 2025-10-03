@@ -376,7 +376,7 @@ class GemmaAi:
         # Custom question_prompt (used for first document)
         question_prompt = PromptTemplate(
             input_variables=["text"],
-            template="技術的な能力や功績に重点を置いて、以下をまとめて下さい。:\n{text}\n\n",
+            template="Please summarise the following information:\n{text}\n\n",
         )
         '''
 
