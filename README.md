@@ -155,6 +155,8 @@ chainlit run gemma_ui_chat.py -h --host 0.0.0.0
 Then access `http://192.168.0.55:8000` with your browser (replace the IP with your host).
 You can now interact with the Gemma AI assistant through a simple web UI.
 
+![Web UI](img/web_ui_example_1.png)
+
 
 ## gpt_ai.py
 This program is an AI chat application designed to engage in conversations and answer your questions using powerful language models like GPT-4o-mini or GPT-5. 
