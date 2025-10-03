@@ -57,13 +57,13 @@ class CtxDocs:
         self.combined_ctx = combined_ctx
 
 # Load context data
-def load_data(
-              data: list[str] = None, # Files, URLs
-              raw_data: list[str] = None, # Raw text, html, ...
-              chunk_size = 1024,
-              chunk_overlap = 120,
-              max_docs: int = 0
-              ) -> CtxDocs:
+def load(
+          data: list[str] = None, # Files, URLs
+          raw_data: list[str] = None, # Raw text, html, ...
+          chunk_size = 1024,
+          chunk_overlap = 120,
+          max_docs: int = 0
+          ) -> CtxDocs:
     # Initialize
     urls = []
     files = []

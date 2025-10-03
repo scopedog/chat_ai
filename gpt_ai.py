@@ -92,7 +92,7 @@ class GptAi:
 
         # Load context files, URLs
         if not bool(docs) and context_data is not None:
-            docs_ctx = ctx_dat.load_data(
+            docs_ctx = ctx_dat.load(
                             data=context_data,
                             chunk_size=chunk_size,
                             chunk_overlap=chunk_overlap)
@@ -420,7 +420,7 @@ class GptAi:
 
     # Add context data
     def add_context_data(self, context_data: list[str]):
-        docs_ctx = ctx_dat.load_data(
+        docs_ctx = ctx_dat.load(
                         data=context_data,
                         chunk_size=self.chunk_size,
                         chunk_overlap=self.chunk_overlap)
