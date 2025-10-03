@@ -81,6 +81,9 @@ Multiple sources are acceptable:
    python3 gemma_ai.py aaa.pdf bbb.docx https://www.example.com
    ```
 
+![Web UI](img/gemma_cui_demo_1.png)
+
+
 ## simple_gemma_ai.py
 Simple AI Chat Program using Google Gemma via Ollama
 
@@ -155,7 +158,7 @@ chainlit run gemma_ui_chat.py -h --host 0.0.0.0
 Then access `http://192.168.0.55:8000` with your browser (replace the IP with your host).
 You can now interact with the Gemma AI assistant through a simple web UI.
 
-![Web UI](img/web_ui_example_1.png)
+![Web UI](img/gemma_web_ui_demo_1.png)
 
 
 ## gpt_ai.py
