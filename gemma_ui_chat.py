@@ -39,8 +39,21 @@ async def on_message(message: cl.Message):
         context_data = [element.path for element in message.elements]
         ai.add_context_data(context_data=context_data)
 
+    elements = [
+        cl.Image(
+            name="local-gif",
+            path="typing.gif",
+            display="inline"
+       )
+    ]
+
+    # Show '...' (thinking dots)
+    bubble = await cl.Message(content="....").send()
+    #bubble = await cl.Message(content="").send() # Supposed to work....
+
     # Ask AI
     reply = ai.ask(message.content)
 
     # Send back to Chainlit frontend
-    await cl.Message(content=reply).send()
+    bubble.content = reply
+    await bubble.update()

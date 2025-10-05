@@ -38,8 +38,12 @@ async def on_message(message: cl.Message):
         context_data = [element.path for element in message.elements]
         ai.add_context_data(context_data=context_data)
 
+    # Show '...' (thinking dots)
+    bubble = await cl.Message(content="....").send()
+
     # Ask AI
     reply = ai.ask(message.content)
 
     # Send back to Chainlit frontend
-    await cl.Message(content=reply).send()
+    bubble.content = reply
+    await bubble.update()
