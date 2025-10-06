@@ -160,7 +160,7 @@ def load_files(files: list[str],
     return CtxDocs(docs=docs, combined_ctx=combined_ctx)
  
 # Load context file
-# This doesn't split text
+# Note this doesn't split result text
 def load_ctx_file(ctx_file: str, docs):
     file = Path(ctx_file)
     if not file.is_file():
@@ -182,9 +182,9 @@ def load_ctx_file(ctx_file: str, docs):
     if info.extension_matches("pdf"):
         logger.info("Context file " + ctx_file + " was detected as a PDF file")
 
-        # We first use PyPDFLoader
-        # This is good for retrieving data that are not included in tables
         '''
+        # PyPDFLoader
+        # This is good for retrieving data that are not included in tables
         loader = PyPDFLoader(ctx_file)
         #load_pages_and_append(loader, docs)
         for page in loader.lazy_load():
@@ -192,11 +192,9 @@ def load_ctx_file(ctx_file: str, docs):
             #print("####\n" + str(page))
         '''
 
-        # Use pdfplumber
+        # Use original pdf loader using pdfplumber
         load_pdf_and_append(ctx_file, docs)
         #print(docs)
-        '''
-        '''
 
     # XLS, XLSX
     # Caution! Put this before DOC as xlsx is detected as DOC

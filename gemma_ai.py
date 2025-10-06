@@ -204,6 +204,7 @@ class GemmaAi:
         # Ask AI
         while num_retries < max_retries:
             try:
+                # Ask AI
                 chat_history = self.chat_history if self.use_history else []
                 answer = self.chain.invoke(
                             {"input": query, "chat_history": chat_history}
