@@ -28,7 +28,7 @@ from langchain_ollama import ChatOllama
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.prompts import PromptTemplate, ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate, MessagesPlaceholder
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import HumanMessage, AIMessage
 from langchain_ollama import OllamaEmbeddings
 from langchain.schema import Document
 from langchain.chains.summarize import load_summarize_chain
@@ -122,7 +122,7 @@ class GemmaAi:
         logger.debug("docs_len: " + str(docs_len))
         if docs_len > 0:
             # Add docs to db
-            try :
+            try:
                 self.db.add_documents(docs)
             except Exception as e:
                 logger.error(f"self.db.add_documents: {e}")
@@ -235,7 +235,7 @@ class GemmaAi:
         while num_retries < max_retries:
             try:
                 chat_history = self.chat_history if self.use_history else []
-                answer = await self.chain.invokea(
+                answer = await self.chain.ainvoke(
                             {"input": query, "chat_history": chat_history}
                          )
                 break
@@ -262,7 +262,7 @@ class GemmaAi:
             self.chat_history.pop(0)
 
         # Append answer to chat_history
-        self.chat_history.extend([HumanMessage(content=query), res])
+        self.chat_history.extend([HumanMessage(content=query), AIMessage(content=res)])
 
     # Vectorize context data
     # Caution! If merge_all_content is True, this returns array of vector

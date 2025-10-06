@@ -19,10 +19,11 @@
 #     http://192.168.0.55:8000
 #
 
+import asyncio
 import chainlit as cl
 from gpt_ai import GptAi
 
-# Initialize GptAi
+# Initialize AI
 ai = GptAi()
 
 @cl.on_chat_start
@@ -38,12 +39,48 @@ async def on_message(message: cl.Message):
         context_data = [element.path for element in message.elements]
         ai.add_context_data(context_data=context_data)
 
-    # Show '...' (thinking dots)
-    bubble = await cl.Message(content="....").send()
+    # Asynchronous
+    ''' This doesn't work
+    placeholder = await cl.Message(content="").send() # Supposed to work....
+    placeholder.content = await ai.ask_a(message.content)
+    await placeholder.update()
+    '''
+
+    # Asynchronous
+    # Create placeholder message
+    placeholder = cl.Message(content="🤖 ...", author="GPT")
+    await placeholder.send()
+
+    # Show typing dots while waiting for response
+    async def animate_dots():
+        dots = 0
+        while not done:
+            placeholder.content = "🤖 " + "." * dots
+            await placeholder.update()
+            dots = (dots % 4) + 1
+            await asyncio.sleep(0.5)
+
+    done = False
+    asyncio.create_task(animate_dots())
+
+    # Get model's response
+    response = await ai.ask_a(message.content)
+    done = True
+
+    # Show response
+    placeholder.content = response
+    await placeholder.update()
+
+
+    '''
+    # Synchronous
+    placeholder = await cl.Message(content="....").send() # Show static typing dots
 
     # Ask AI
-    reply = ai.ask(message.content)
+    response = ai.ask(message.content)
 
     # Send back to Chainlit frontend
-    bubble.content = reply
-    await bubble.update()
+    placeholder.content = response
+    await placeholder.update()
+    '''
+
