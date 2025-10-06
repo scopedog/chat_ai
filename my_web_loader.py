@@ -38,10 +38,10 @@ class PareHTML:
         # For HTML, you shouldn't do this
         regex = []
         regex.append({"regex": re.compile(r"[ 　]+"), "replace": " "})
+        regex.append({"regex": re.compile(r"\n{4,}"), "replace": "\n\n\n"})
         '''
         regex.append({"regex": re.compile(r"[\t]+"), "replace": "\t"})
         regex.append({"regex": re.compile(r"\r\n"), "replace": "\n"})
-        regex.append({"regex": re.compile(r"\n\n+"), "replace": "\n"})
         '''
 
         # Get base url
