@@ -53,15 +53,16 @@ async def on_message(message: cl.Message):
     await placeholder.send()
 
     # Show typing dots while waiting for response
+    done = False
     async def animate_dots():
-        dots = 0
+        dots = 1
         while not done:
             placeholder.content = "🤖 " + "." * dots
             await placeholder.update()
             dots = (dots % 4) + 1
             await asyncio.sleep(0.5)
 
-    done = False
+    # Start dots animation
     asyncio.create_task(animate_dots())
 
     # Get model's response

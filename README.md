@@ -116,6 +116,7 @@ This program provides a simple conversational interface powered by Google Gemma,
   python3 simple_gemma_ai.py https://mechabay.com/about-armored-trooper-votoms
   ```
   and ask "What is VOTOMS and how tall is Scopedog?"
+  Note AI will not answer correctly if the given context is too large.
 
 **Underlying Technology:**
 
@@ -230,6 +231,7 @@ You can also specify files and/or URLs as sources:
 python3 simple_gpt_ai.py aaa.pdf bbb.docx https://www.example.com
 ```
 but the context size must be lower than the LLM's context window size.
+If the given context is too large, AI will not answer correctly.
 
 **Intended Use:**
 

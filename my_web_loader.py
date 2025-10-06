@@ -264,7 +264,7 @@ class MyWebLoader:
             #print(html.links)
             self.links = list(set(self.links + html.links))
 
-        logger.debug("self.links: " + str(self.links))
+        #logger.debug("self.links: " + str(self.links))
 
         '''
         # Adjust links
