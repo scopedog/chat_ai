@@ -10,6 +10,7 @@
 
 import os
 import sys
+import asyncio
 import time
 import random
 import string
@@ -214,14 +215,10 @@ class GptAi:
         # Ask AI
         while num_retries < max_retries:
             try:
-                if self.use_history:
-                    answer = self.chain.invoke(
-                        {"input": query, "chat_history": self.chat_history}
-                    )
-                else:
-                    answer = self.chain.invoke(
-                        {"input": query, "chat_history": []}
-                    )
+                chat_history = self.chat_history if self.use_history else []
+                answer = self.chain.invoke(
+                            {"input": query, "chat_history": chat_history}
+                         )
                 break
             except openai.RateLimitError as e:
                 num_retries += 1
@@ -229,18 +226,24 @@ class GptAi:
 
         # Too many retries
         if num_retries >= max_retries:
-            raise RuntimeError("Too many retries for OpenAI")
+            raise RuntimeError("Too many invoke() retries")
         else:
-            # Success, adjust history
+            # Success
+            res = answer['answer'].rstrip()
+
+            # Adjust history
             if self.use_history:
-                # Remove oldest history entry
-                if len(self.chat_history) >= self.chat_history_len:
-                    self.chat_history.pop(0)
+                self.adjust_chat_history(query, res)
 
-                # Append answer to chat_history
-                self.chat_history.extend([HumanMessage(content=query), answer["answer"]])
+            return res
 
-            return answer["answer"]
+    # Adjust chat history
+    def adjust_chat_history(self, query: str, res: str):
+        if len(self.chat_history) >= self.chat_history_len:
+            self.chat_history.pop(0)
+
+        # Append answer to chat_history
+        self.chat_history.extend([HumanMessage(content=query), res])
 
     # Vectorize context data
     # Caution! If merge_all_content is True, this returns array of vector

@@ -10,6 +10,7 @@
 
 import os
 import sys
+import asyncio
 import time
 import requests
 import random
@@ -195,7 +196,7 @@ class GemmaAi:
             #print("Delete: " + self.db_collection_name)
             #self.db._client.delete_collection(self.db_collection_name)
 
-    # Ask
+    # Ask (synchronous)
     def ask(self, query: str):
         max_retries = 10
         num_retries = 0
@@ -203,14 +204,10 @@ class GemmaAi:
         # Ask AI
         while num_retries < max_retries:
             try:
-                if self.use_history:
-                    answer = self.chain.invoke(
-                        {"input": query, "chat_history": self.chat_history}
-                    )
-                else:
-                    answer = self.chain.invoke(
-                        {"input": query, "chat_history": []}
-                    )
+                chat_history = self.chat_history if self.use_history else []
+                answer = self.chain.invoke(
+                            {"input": query, "chat_history": chat_history}
+                         )
                 break
             except Exception as e:
                 num_retries += 1
@@ -218,21 +215,54 @@ class GemmaAi:
 
         # Too many retries
         if num_retries >= max_retries:
-            raise RuntimeError("Too many retries for OpenAI")
+            raise RuntimeError("Too many invoke() retries")
         else:
-            # Success, adjust history
+            # Success
+            res = answer['answer'].rstrip()
+
+            # Adjust chat history
             if self.use_history:
-                # Remove oldest history entry
-                if len(self.chat_history) >= self.chat_history_len:
-                    self.chat_history.pop(0)
+                self.adjust_chat_history(query, res)
 
-                # Append answer to chat_history
-                self.chat_history.extend([HumanMessage(content=query), answer["answer"]])
+            return res
 
-            if 'answer' in answer:
-                return answer['answer'].rstrip()
-            else:
-                return answer.rstrip()
+    # Ask (asynchronous)
+    async def ask_a(self, query: str):
+        max_retries = 10
+        num_retries = 0
+
+        # Ask AI
+        while num_retries < max_retries:
+            try:
+                chat_history = self.chat_history if self.use_history else []
+                answer = await self.chain.invokea(
+                            {"input": query, "chat_history": chat_history}
+                         )
+                break
+            except Exception as e:
+                num_retries += 1
+                time.sleep(20)
+
+        # Too many retries
+        if num_retries >= max_retries:
+            raise RuntimeError("Too many invoke() retries")
+        else:
+            # Success
+            res = answer['answer'].rstrip()
+
+            # Adjust chat history
+            if self.use_history:
+                self.adjust_chat_history(query, res)
+
+            return res
+
+    # Adjust chat history
+    def adjust_chat_history(self, query: str, res: str):
+        if len(self.chat_history) >= self.chat_history_len:
+            self.chat_history.pop(0)
+
+        # Append answer to chat_history
+        self.chat_history.extend([HumanMessage(content=query), res])
 
     # Vectorize context data
     # Caution! If merge_all_content is True, this returns array of vector
