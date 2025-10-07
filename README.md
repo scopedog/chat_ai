@@ -115,7 +115,7 @@ This program provides a simple conversational interface powered by Google Gemma,
   ```bash
   python3 simple_gemma_ai.py https://mechabay.com/about-armored-trooper-votoms
   ```
-  and ask "What is VOTOMS and how tall is Scopedog?"
+  and ask "What is VOTOMS and how tall is Scopedog?"  
   Note AI will not answer correctly if the given context is too large.
 
 **Underlying Technology:**
