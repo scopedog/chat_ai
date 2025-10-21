@@ -20,6 +20,8 @@
 #
 
 import asyncio
+from datetime import datetime
+from loguru import logger
 import chainlit as cl
 from gemma_ai import GemmaAi
 import ctx_dat
@@ -27,12 +29,20 @@ import ctx_dat
 # Initialize AI
 ai = GemmaAi()
 
+# Initialize logger
+current_datetime = datetime.now()
+current_time_str = current_datetime.strftime("%Y%m%d_%H%M%S")
+logger.remove() # Suppress output to stdout?
+logger.add(f"log/{current_time_str}.log") # Output to log file
+
+# On chart start
 @cl.on_chat_start
 async def on_chat_start():
     await cl.Message(
         content="👋 Hi! I’m your AI assistant. Ask me anything!"
     ).send()
 
+# On message
 @cl.on_message
 async def on_message(message: cl.Message):
     # Check if any files are attached
@@ -47,7 +57,7 @@ async def on_message(message: cl.Message):
     await placeholder.update()
     '''
 
-    # Asynchronous
+    # Asynchronous version
     # Create placeholder message
     placeholder = cl.Message(content="🤖 ...", author="Gemma")
     await placeholder.send()
@@ -68,6 +78,8 @@ async def on_message(message: cl.Message):
     # Get model's response
     response = await ai.ask_a(message.content)
     done = True
+    logger.info("User: " + message.content)
+    logger.info("AI: " + response)
 
     # Show response
     placeholder.content = response
@@ -75,7 +87,7 @@ async def on_message(message: cl.Message):
 
 
     '''
-    # Synchronous
+    # Synchronous version
     placeholder = await cl.Message(content="....").send() # Show static typing dots
 
     # Ask AI
