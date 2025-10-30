@@ -50,13 +50,14 @@ class GemmaAi:
         context_data: list[str] = None, # Sources of data (file paths, URLs)
                                     # If docs is not None, this is ignored
         max_docs: int = 0,
-        use_history: bool = True,
-        max_history_len: int = 10,
+        use_history: bool = True, # Turn on chat history awareness
+        max_history_len: int = 10, # Remember this # of past chats
         ollama_host: str = "localhost", # Ollama host running LLM
         ollama_port: int = 11434,
         model = "gemma3n:e4b", # LLM model: "gemma3:latest", "gemma3:12b", ....
         embeddings_model = "bge-m3:latest", # Embeddings model
         temperature = 0.0,
+        session_id = None,
     ):
         # Initialize
         self.llm = None
@@ -74,12 +75,17 @@ class GemmaAi:
         self.chunk_overlap = chunk_overlap
         ollama_base_url = f"http://{ollama_host}:{ollama_port}"
 
+        # Store/generate session ID
+        self.session_id = session_id if bool(session_id) else ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+
+        # Set system prompt
         if system_prompt is None:
             system_prompt = (
                 "You are a very kind assitant. Please answer user's questions."
                 "\n\n"
                 "{context}"
             )
+        self.system_prompt = system_prompt
 
         # Load context files, URLs
         if not bool(docs) and context_data is not None:
@@ -107,7 +113,8 @@ class GemmaAi:
 
         # Initialize db
         chromadb.api.client.SharedSystemClient.clear_system_cache()
-        self.db_collection_name = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+        #self.db_collection_name = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+        self.db_collection_name = self.session_id
         #print("db_collection_name: " + self.db_collection_name)
         #self.db_client = chromadb.PersistentClient(path='chroma')
         self.db = Chroma(collection_name=self.db_collection_name,
@@ -477,8 +484,8 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         context_data = sys.argv[1:]
 
-    # Build knowledge base for admin manual
-    qa = GemmaAi(
+    # Initialize AI
+    ai = GemmaAi(
             chunk_size=4096,
             chunk_overlap=512,
             context_data=context_data,
@@ -506,7 +513,7 @@ if __name__ == "__main__":
                 else:
                     # Ask question to AI
                     print("\n* Asking AI....\n")
-                    res = qa.ask(question)
+                    res = ai.ask(question)
 
                 break
 

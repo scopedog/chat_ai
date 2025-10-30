@@ -59,14 +59,14 @@ class GptAi:
         combined_ctx: str = "",
         chunk_size: int = 1024,
         chunk_overlap: int = 120,
-        #temperature = 0.0, # We no longer use temperature
         pattern: Optional[str] = None,
         system_prompt: str = None,
         context_data: list[str] = None, # Sources of data (file paths, URLs)
                                     # If docs is not None, this is ignored
         max_docs: int = 0,
-        use_history: bool = True,
-        max_history_len: int = 10,
+        use_history: bool = True, # Remember chat history
+        max_history_len: int = 10, # Remember this # of past chats   
+        session_id = None, # Session ID
     ):
 
         # Initialize data
@@ -84,6 +84,10 @@ class GptAi:
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
 
+        # Store/generate session ID
+        self.session_id = session_id if bool(session_id) else ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+
+        # Set system prompt
         if system_prompt is None:
             system_prompt = (
                 "You are a very kind assitant. Please answer user's questions."
@@ -115,7 +119,8 @@ class GptAi:
 
         # Initialize db
         chromadb.api.client.SharedSystemClient.clear_system_cache()
-        self.db_collection_name = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+        self.db_collection_name = self.session_id
+        #self.db_collection_name = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
         #print("db_collection_name: " + self.db_collection_name)
         #self.db_client = chromadb.PersistentClient(path='chroma')
         self.db = Chroma(collection_name=self.db_collection_name,
@@ -480,8 +485,8 @@ if __name__ == "__main__":
         "{context}"
     )
 
-    # Build knowledge base for admin manual
-    qa = GptAi(
+    # Initialize AI
+    ai = GptAi(
         chunk_size=1024,
         chunk_overlap=128,
         context_data=context_data,
@@ -509,7 +514,7 @@ if __name__ == "__main__":
                 else:
                     # Ask question to AI
                     print("\n* Asking AI....\n")
-                    res = qa.ask(question)
+                    res = ai.ask(question)
 
                 break
 
