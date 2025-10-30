@@ -214,6 +214,9 @@ __marimo__/
 .files/
 chainlit.md
 
+# Open WebUI
+.webui_secret_key
+
 # Misc
 pipreqs.sh
 log/
