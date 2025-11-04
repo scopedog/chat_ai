@@ -270,3 +270,27 @@ chainlit run gpt_ui_chat.py -h --host 0.0.0.0
 Then access `http://192.168.0.55:8000` with your browser (replace the IP with your host).
 
 
+## ctx_dat.py
+
+This is also a powerful program that provides a versatile document loader and preprocessor designed to ingest content from various file formats (PDF, DOCX, TXT, CSV, XLS, PPTX, ODT) and URLs, preparing it for use with LangChain's Document objects in a Retrieval-Augmented Generation (RAG) pipeline.
+
+**Features**
+*   **Multi-Format Support:** Handles a wide range of document types, including:
+    *   PDF (using `pdflumber`)
+    *   DOCX (using `python-docx`)
+    *   TXT
+    *   CSV (using `csv`)
+    *   XLS (using `pandas`)
+    *   PPTX (using `python-pptx`)
+    *   ODT (using `python-oxml`)
+    *   Websites (via URL input)
+*   **Table Extraction and Filtering:**  Specifically designed to extract and filter tables from PDF documents using `pdflumber`. This helps in isolating structured data for better RAG performance.
+*   **Text Extraction:** Extracts plain text content from various document formats.
+*   **Data Anonymization:** Includes functions to anonymize sensitive information like names, email addresses, phone numbers, and URLs within the document content.
+*   **Text Replacement:** Provides functionality to replace specific text patterns with anonymized or standardized alternatives.
+*   **Metadata Enrichment:**  Adds metadata to each document object, including the source file name, page number, and potentially anonymized source information.
+*   **LangChain Integration:**  Creates `Document` objects compatible with LangChain's RAG framework.
+*   **Flexible Input:** Accepts a list of file paths or URLs as input.
+*   **Customizable Anonymization:** Offers functions to customize the anonymization process with different replacement strings.
+
+
