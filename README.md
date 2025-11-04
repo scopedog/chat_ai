@@ -283,14 +283,7 @@ This is also a powerful program that provides a versatile document loader and pr
     *   XLS (using `pandas`)
     *   PPTX (using `python-pptx`)
     *   ODT (using `python-oxml`)
-    *   Websites (via URL input)
+    *   Websites (via MyWebLoader in my_web_loader.py)
 *   **Table Extraction and Filtering:**  Specifically designed to extract and filter tables from PDF documents using `pdflumber`. This helps in isolating structured data for better RAG performance.
-*   **Text Extraction:** Extracts plain text content from various document formats.
-*   **Data Anonymization:** Includes functions to anonymize sensitive information like names, email addresses, phone numbers, and URLs within the document content.
-*   **Text Replacement:** Provides functionality to replace specific text patterns with anonymized or standardized alternatives.
-*   **Metadata Enrichment:**  Adds metadata to each document object, including the source file name, page number, and potentially anonymized source information.
-*   **LangChain Integration:**  Creates `Document` objects compatible with LangChain's RAG framework.
-*   **Flexible Input:** Accepts a list of file paths or URLs as input.
-*   **Customizable Anonymization:** Offers functions to customize the anonymization process with different replacement strings.
 
 
