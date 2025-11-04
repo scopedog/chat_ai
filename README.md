@@ -284,7 +284,7 @@ This is also a powerful program that provides a versatile document loader and pr
     *   PPTX (using DoclingLoader)
     *   ODT (using LangChain's UnstructuredODTLoader)
     *   Websites (via MyWebLoader in my_web_loader.py)
-*   **Table Extraction and Filtering:**  Specifically designed to extract and filter tables from PDF/DOCX documents using `pdflumber`.
+*   **Table Extraction and Filtering:**  Specifically designed to extract and filter tables from PDF documents using `pdflumber` and DOCX documents.
 This helps in isolating structured data for better RAG performance.
 
 
