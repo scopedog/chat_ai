@@ -81,6 +81,12 @@ Multiple sources are acceptable:
    python3 gemma_ai.py aaa.pdf bbb.docx https://www.example.com
    ```
 
+The below is a screenshot of 
+
+   ```bash
+   python3 gemma_ai.py cats.txt
+   ```
+
 ![Web UI](img/gemma_cui_demo_1.png)
 
 
@@ -262,4 +268,5 @@ chainlit run gpt_ui_chat.py -h --host 0.0.0.0
 ```
 
 Then access `http://192.168.0.55:8000` with your browser (replace the IP with your host).
+
 

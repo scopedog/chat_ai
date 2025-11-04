@@ -50,7 +50,7 @@ class GemmaAi:
         context_data: list[str] = None, # Sources of data (file paths, URLs)
                                     # If docs is not None, this is ignored
         max_docs: int = 0,
-        use_history: bool = True, # Turn on chat history awareness
+        use_history: bool = True, # Remember chat history
         max_history_len: int = 10, # Remember this # of past chats
         ollama_host: str = "localhost", # Ollama host running LLM
         ollama_port: int = 11434,
