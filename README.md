@@ -276,14 +276,15 @@ This is also a powerful program that provides a versatile document loader and pr
 
 **Features**
 *   **Multi-Format Support:** Handles a wide range of document types, including:
-    *   PDF (using `pdflumber`)
-    *   DOCX (using `python-docx`)
+    *   PDF (using pdflumber)
+    *   DOCX (using LangChain's UnstructuredWordDocumentLoader)
     *   TXT
-    *   CSV (using `csv`)
-    *   XLS (using `pandas`)
-    *   PPTX (using `python-pptx`)
-    *   ODT (using `python-oxml`)
+    *   CSV (using LangChain's CSVLoader)
+    *   XLS (using LangChain's UnstructuredExcelLoader)
+    *   PPTX (using DoclingLoader)
+    *   ODT (using LangChain's UnstructuredODTLoader)
     *   Websites (via MyWebLoader in my_web_loader.py)
-*   **Table Extraction and Filtering:**  Specifically designed to extract and filter tables from PDF documents using `pdflumber`. This helps in isolating structured data for better RAG performance.
+*   **Table Extraction and Filtering:**  Specifically designed to extract and filter tables from PDF/DOCX documents using `pdflumber`.
+This helps in isolating structured data for better RAG performance.
 
 
