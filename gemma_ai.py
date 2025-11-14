@@ -44,8 +44,8 @@ class GemmaAi:
         self,
         docs: list[Document] = [], # Split documents
         combined_ctx: str = "",
-        chunk_size: int = 4096,
-        chunk_overlap: int = 512,
+        chunk_size: int = 1024,
+        chunk_overlap: int = 128,
         system_prompt: str = None,
         context_data: list[str] = None, # Sources of data (file paths, URLs)
                                     # If docs is not None, this is ignored
@@ -486,8 +486,8 @@ if __name__ == "__main__":
 
     # Initialize AI
     ai = GemmaAi(
-            chunk_size=4096,
-            chunk_overlap=512,
+            chunk_size=1024,
+            chunk_overlap=128,
             context_data=context_data,
             system_prompt=system_prompt,
             use_history=True

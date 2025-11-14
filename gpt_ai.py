@@ -57,8 +57,8 @@ class GptAi:
         self,
         docs: list[Document] = [], # Split documents
         combined_ctx: str = "",
-        chunk_size: int = 1024,
-        chunk_overlap: int = 120,
+        chunk_size: int = 2048,
+        chunk_overlap: int = 256,
         pattern: Optional[str] = None,
         system_prompt: str = None,
         context_data: list[str] = None, # Sources of data (file paths, URLs)
@@ -173,6 +173,9 @@ class GptAi:
                 MessagesPlaceholder("chat_history"),
                 ("human", "{input}"),
             ]
+
+            # Note MessagesPlaceholder takes "n_messages" argument which may
+            # be used to limit # of past chat messages
         )
 
         # Create Q and A prompt
@@ -487,8 +490,8 @@ if __name__ == "__main__":
 
     # Initialize AI
     ai = GptAi(
-        chunk_size=1024,
-        chunk_overlap=128,
+        chunk_size=2048,
+        chunk_overlap=256,
         context_data=context_data,
         system_prompt=system_prompt,
         use_history=True
